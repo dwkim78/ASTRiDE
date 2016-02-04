@@ -4,6 +4,10 @@ This package is the Python version of the streak detection pipeline
 originally programmed in C. See details at:
 [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)
 
+Basic idea is same with the C version. We, however, improved each module
+and fixed many bugs in this Python version.
+
+
 ## Index
 1. [Dependency](#1-dependency)
 2. [Installation](#2-installation)
@@ -15,6 +19,10 @@ originally programmed in C. See details at:
 - [Citation](#citation)
 
 ## 1. Dependency
+
+numpy
+astropy - for fits reading
+matplotlib - for plotting results
 
 ## 2. Installation
 
