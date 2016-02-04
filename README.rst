@@ -1,0 +1,1 @@
+ASTRiDE (Automated Streak Detection for High Velocity Objects)
