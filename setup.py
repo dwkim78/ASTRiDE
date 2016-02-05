@@ -16,7 +16,7 @@ setup(
     license='MIT',
     author='Dae-Won Kim',
     author_email='dwkim78@gmail.com',
-    install_requires=['numpy>=1.9',],
+    install_requires=['numpy>=1.9', 'photutils>=0.2.1'],
     keywords=['astronomy', 'image', 'light curves', 'streak'],
     classifiers=[
         'Development Status :: 1 - Planning',

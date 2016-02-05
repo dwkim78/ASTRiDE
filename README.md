@@ -21,6 +21,7 @@ and fixed many bugs in this Python version.
 ## 1. Dependency
 
 numpy
+phoutils - for background subtracting
 astropy - for fits reading
 matplotlib - for plotting results
 

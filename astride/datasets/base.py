@@ -4,12 +4,11 @@ __author__ = 'kim'
 Base IO code for all datasets
 """
 
-import numpy as np
-
 from os.path import dirname
 from os.path import join
 
 from astropy.io import fits
+
 
 def read_fits(filename='long.fits'):
     """
