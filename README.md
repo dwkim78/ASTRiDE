@@ -31,6 +31,10 @@ For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
  * Numerical Python library.
 
+[Scikit-image 0.11.3+](http://scikit-image.org/)
+ 
+ * To get contour map of a fits image.
+
 [Astropy 1.1.1+](http://www.astropy.org/)
 
  * For reading fits file and some utility functions.
@@ -109,7 +113,7 @@ and one text file. The two images are:
 [ all.png ]</div>
 
 
-The output text file named as "streak.txt" contains following information.
+The output text file named as "streaks.txt" contains following information.
 
 | Column | Description |
 |----:|:------------|
@@ -124,15 +128,12 @@ The output text file named as "streak.txt" contains following information.
 | connectivity  | ID of another streak that is likely to be linked to the current streak  |
 
 
-I will explain details about the figures and the text file in the following section.
-
-
 ## 4. How to Use ASTRiDE? 
 
 In this section, I will show how to use ASTRiDE to detect streak. I will use
 the fits image shown in the previous section (i.e. all.png).
 
-### Create STREAK Instance
+### Create Streak Instance
 
 We first need to create ASTRiDE Streak instance as:
 
@@ -142,7 +143,7 @@ from astride import Streak
 streak = Streak('long.fits')
 ```
 
-There are many options customizing the Streak instance such as:
+You can replace "long.fits" with your own fits filename. There are many options customizing the Streak instance such as:
 
 | Options | Description |
 |----:|:------------|
@@ -152,12 +153,13 @@ There are many options customizing the Streak instance such as:
 | shape_cut  | An empirical cut for shape factor |
 | area_cut | An empirical cut for area inside each contour |
 | radius_dev_cut  | An empirical cut for radius deviation |
-| connectivity_angle | The maximum angle to link each edge |
+| connectivity_angle | The maximum angle to link each edge (i.e. each contour) |
 | output_path  | An output path to save figures and outputs |
 
-Although you can customize pretty much all of the Streak instance, I recommend
-to leave them as they are.
-
+Although you can customize pretty much everything of the Streak instance, 
+I recommend to leave them as they are.
+Hereinafter, the term "edge" means each contour from the contour map derived
+from a fits image.
 
 ### Detect Streaks
 
@@ -171,14 +173,55 @@ streak.detect()
 In order to detect streaks, the Streak instance does as follows:
 
   1. Background removal
-    * We use photutils to generate a background map of an input fits image, and
-    then subtract the background from the raw image.
+    * We first remove background from the fits image. The background map
+    is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html).
+    It calculates the map by sigma-clipping method within the box of the
+    size "bkg_box_size". 
   
   2. Contour map
+    * Using the [scikit-image](http://scikit-image.org/), we get
+    a contour map of the fits image. The level of the contour
+    is controlled by the "contour_threshold" value, such as:
+    contour_threshold * background standard deviation (calculated
+    when deriving the background map).
+    
+    <div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
+[ All the edges derived using the contour map ]</div>
   
-  3. Streak detection based on the shape of the contour
+  3. Streak detection based on the morphologies of each contour (i.e. edge)
+    * 
   
-  4. Connect streaks
+  4. Link streaks by their slopes
+    * 
+
+### Accessible Information inside the Streak instance
+
+The streak instance also contains many information derived during the 
+detection processes such as:
+
+| Variable | Description |
+|----:|:------------|
+| streak.raw_image | Raw fit image before background removal |
+| streak.background_map | Derived background map |
+| streak.image | Background removed image |
+| streak.raw_edges | All the edges detected using a contour map |
+| streak.streaks | The final list of streaks |
+
+
+Among these, ```streak.streaks``` contains a list of detected streaks. 
+Each element has all the information that "streaks.txt" has. 
+It also contains additional information such as:
+
+| Options | Description |
+|----:|:------------|
+| x | X coordinates of a streak |
+| y | Y coordinates of a streak |
+| x_min and x_max | The minimum and maximum x coordinates of a streak |
+| y_min and y_max | The minimum and maximum y coordinates of a streak |
+
+Using the above information, you can make your own figures if needed.
+
 
 ### Note
 

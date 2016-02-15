@@ -5,7 +5,7 @@ import pylab as pl
 
 from skimage import measure
 from astropy.io import fits
-from astropy.stats import sigma_clipped_stats
+#from astropy.stats import sigma_clipped_stats
 from photutils.background import Background
 
 from astride.utils.edge import EDGE
@@ -152,7 +152,10 @@ class Streak:
 
         # Plot the image.
         plot_data = self.image.copy()
-        mean, med, std = sigma_clipped_stats(self.image, sigma=3.0, iters=5)
+        #mean, med, std = sigma_clipped_stats(self.image, sigma=3.0, iters=5)
+        # Background subtracted image, so the median value should be close to zero.
+        med = 0.
+        std = self.__bkg.background_rms_median
         plot_data[np.where(self.image > med + cut_threshold * std)] = \
             med + cut_threshold * std
         plot_data[np.where(self.image < med - cut_threshold * std)] = \

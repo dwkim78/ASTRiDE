@@ -17,7 +17,8 @@ setup(
     author='Dae-Won Kim',
     author_email='dwkim78@gmail.com',
     install_requires=['numpy>=1.10.4', 'photutils>=0.2.1', 'astropy>=1.1.1',
-                      'matplotlib>=1.5.1', 'scipy>=0.16.1'],
+                      'matplotlib>=1.5.1', 'scipy>=0.16.1',
+                      'scikit-image>=0.11.3'],
     keywords=['astronomy', 'image', 'streak', 'satellite', 'meteor'],
     classifiers=[
         'Development Status :: 4 - Beta',
