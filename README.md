@@ -197,16 +197,8 @@ In order to detect streaks, the Streak instance does as follows:
     
 | Morphology | Description |
 |----:|:------------|
-| Shape Factor | [Circularity](https://goo.gl/Z0Jy9z)
-The circularity of a circle is 1, and streak-like shape
-has much smaller circularity than 1. We set 0.2 as a threshold
-(i.e. option "shape_cut") |
-| Radius Deviation | A approximated deviation from roundness. Since we know the
-                center of each edge, we can calculate distances to each
-                data point from the center. We define a radius as
-                the median value of the distances. We then
-                calculate (the standard deviation of distances - radius) / radius.
-                We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
+| Shape Factor | [Circularity](https://goo.gl/Z0Jy9z). The circularity of a circle is 1, and streak-like shape has much smaller circularity than 1. We set 0.2 as a threshold (i.e. option "shape_cut") |
+| Radius Deviation | A approximated deviation from roundness. Since we know the center of each edge, we can calculate distances to each data point from the center. We define a radius as the median value of the distances. We then calculate (the standard deviation of distances - radius) / radius. We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
 | Area | The area must larger than 10 pixels (i.e. option "area_cut"). |
 
 The following figure shows the remaining two streak after these cut.
