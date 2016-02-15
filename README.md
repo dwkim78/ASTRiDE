@@ -17,6 +17,7 @@ Basic idea is same with the C version, which uses a contour map of a fits image 
 
 - [ChangeLog](#changelog)
 - [Citation](#citation)
+- [Contact](#contact)
 
 ## 1. Dependency
 
@@ -297,4 +298,8 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## Citation
 
-If you use this package for science publication, we will appreciate a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to this github repository.
+If you use this package for science publication, we will appreciate a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to the current [github repository](https://github.com/dwkim78/ASTRiDE).
+
+## Contact
+
+If you have questions, send an email to dwkim78 at gmail. My official webpage is [sites.google.com/site/dwkim78](https://sites.google.com/site/dwkim78/).
