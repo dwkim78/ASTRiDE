@@ -186,7 +186,7 @@ In order to detect streaks, the Streak instance does as follows:
     when deriving the background map). Default "contour_threshold" is 3.
     The following images shows all the edges detected using the contour map.
     
-    <div align="center">
+<div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
 [ All the edges (color-coded) derived using the contour map ]</div>
   
@@ -197,7 +197,7 @@ In order to detect streaks, the Streak instance does as follows:
     
 | Morphology | Description |
 |----:|:------------|
-| Shape Factor | [Circularity](https://en.wikipedia.org/wiki/Shape_factor_(image_analysis_and_microscopy)#Circularity) 
+| Shape Factor | [Circularity](https://goo.gl/Z0Jy9z)
                 The circularity of a circle is 1, and streak-like shape
                 has much smaller circularity than 1. We set 0.2 as a threshold
                 (i.e. option "shape_cut") |
@@ -211,12 +211,12 @@ In order to detect streaks, the Streak instance does as follows:
 
 The following figure shows the remaining two streak after these cut.
  
-     <div align="center">
+<div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/two_streaks.png">
 [ Two streaks after the morphology cut ]</div>
   
   4. Link streaks by their slopes
-    * 
+    * We finally detected two streaks.
 
 ### Accessible Information inside the Streak instance
 
