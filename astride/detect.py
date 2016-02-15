@@ -13,6 +13,8 @@ from astride.utils.edge import EDGE
 
 class Streak:
     def __init__(self, filename, bkg_box_size=50, contour_threshold=3.,
+                 min_points=10, shape_cut=0.2, area_cut=10.,
+                 radius_dev_cut=0.5, connectivity_angle=3.,
                  output_path=None):
         """
         Initialize the streak instance.
@@ -20,6 +22,12 @@ class Streak:
         :param bkg_box_size: Box size for background estimation.
         :param contour_threshold: Threshold to search contours (i.e. edges of
         an input image)
+        :param min_points: The number of minimum data points in each edge.
+        :param shape_cut: An empirical shape factor cut.
+        :param area_cut: An empirical area cut.
+        :param radius_dev_cut: An empirical radius deviation cut.
+        :param connectivity_angle: An maximum angle to connect
+        each separated edge.
         :param output_path: Path to save figures and output files. If None,
         the base filename is used as the folder name.
         """
@@ -43,6 +51,13 @@ class Streak:
         # Other variables.
         self.bkg_box_size = bkg_box_size
         self.contour_threshold = contour_threshold
+
+        # These variables for the edge detections and linking.
+        self.min_points = min_points
+        self.shape_cut = shape_cut
+        self.area_cut = area_cut
+        self.radius_dev_cut = radius_dev_cut
+        self.connectivity_angle = connectivity_angle
 
         # Set output path.
         if output_path is None:
@@ -79,7 +94,10 @@ class Streak:
                                          )
 
         # Quantify shapes of the contours and save them as 'edges'.
-        edge = EDGE(contours)
+        edge = EDGE(contours, min_points=self.min_points,
+                    shape_cut=self.shape_cut, area_cut=self.area_cut,
+                    radius_dev_cut=self.radius_dev_cut,
+                    connectivity_angle=self.connectivity_angle)
         edge.quantify()
         self.raw_edges = edge.get_edges()
 

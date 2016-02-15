@@ -10,7 +10,7 @@ class EDGE:
         Find, characterize, and quantify the shape of edges (i.e. borders)
         using input contours.
         :param contours: An array containing contour list.
-        :param min_points: The number of minimum data points in the contour.
+        :param min_points: The number of minimum data points in each edge.
         :param shape_cut: An empirical shape factor cut.
         :param area_cut: An empirical area cut.
         :param radius_dev_cut: An empirical radius deviation cut.
