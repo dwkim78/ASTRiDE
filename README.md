@@ -179,18 +179,41 @@ In order to detect streaks, the Streak instance does as follows:
     size "bkg_box_size". 
   
   2. Contour map
-    * Using the [scikit-image](http://scikit-image.org/), we get
-    a contour map of the fits image. The level of the contour
+    * Using the [scikit-image](http://scikit-image.org/), we derive
+    the contour map of the fits image. The level of the contour
     is controlled by the "contour_threshold" value, such as:
     contour_threshold * background standard deviation (calculated
-    when deriving the background map).
+    when deriving the background map). Default "contour_threshold" is 3.
+    The following images shows all the edges detected using the contour map.
     
     <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
-[ All the edges derived using the contour map ]</div>
+[ All the edges (color-coded) derived using the contour map ]</div>
   
   3. Streak detection based on the morphologies of each contour (i.e. edge)
-    * 
+    * As you can see from the above figure, there are many edges of 
+    star-like sources that are definitely <b>not</b> streaks. We remove such
+    star-like sources by using the morphologies of each edge such as:
+    
+| Morphology | Description |
+|----:|:------------|
+| Shape Factor | [Circularity](https://en.wikipedia.org/wiki/Shape_factor_(image_analysis_and_microscopy)#Circularity) 
+                The circularity of a circle is 1, and streak-like shape
+                has much smaller circularity than 1. We set 0.2 as a threshold
+                (i.e. option "shape_cut") |
+| Radius Deviation | A approximated deviation from roundness. Since we know the
+                center of each edge, we can calculate distances to each
+                data point from the center. We define a radius as
+                the median value of the distances. We then
+                calculate (the standard deviation of distances - radius) / radius.
+                We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
+| Area | The area must larger than 10 pixels (i.e. option "area_cut"). |
+
+The following figure shows the remaining two streak after these cut.
+ 
+     <div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/two_streaks.png">
+[ Two streaks after the morphology cut ]</div>
   
   4. Link streaks by their slopes
     * 
