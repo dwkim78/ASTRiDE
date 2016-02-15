@@ -255,7 +255,7 @@ As you might notice, ASTRiDE does not use any source detection algorithm (e.g. S
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/source_detection.png">
-[ Source Detection ]</div>
+[ Red circles are the sources detected by a source detection algorithm (i.e. daofind-like algorithm) ]</div>
 
 Thus we cannot use such source detection algorithms to remove stars before detecting streaks. One could think of using each detected source to detect streaks by somehow connecting them. Such method, however, would not be successful either for 1) short streaks, or 2) crowded field.
 
