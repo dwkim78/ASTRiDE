@@ -1,10 +1,10 @@
-# ASTRiDE (Automated Streak Detection for High Velocity Objects)
+# ASTRiDE (Automated Streak Detection for Astronomical Images)
 
 This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
 
 Basic idea is same with the C version, which uses a contour map of a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each edge (i.e. each contour) in the contour map is a streak or not For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
-<b>Note</b>: ASTRiDE's acronym includes "High Velocity Objects" (because it is the title of the published paper), thus relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long.
+The published paper title includes "High Velocity Objects", which means relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long. That is why the acronym, ASTRiDE, does not include "High Velocity Objects". 
 
 
 ## Index
