@@ -1,11 +1,8 @@
--------- Original Message --------
-Subject:        RE: streak detection source
-Date:   Wed, 27 Sep 2006 06:43:00 +0900
-From:   Kim, Dae-Won
-To:     'yhbae@galaxy.yonsei.ac.kr'
-CC:     'BYUN'
-
-
+#----------------------------------------------------------#
+#   Instruction (in Korean) for the Originall C Pipeline   #
+# Note: I do not recommend to use this C pipeline. Please  #
+#       use recently programmed Python version, ASRTiDE.   #
+#----------------------------------------------------------#
 
  첨부한 파일에는 c source와 샘플 fits 파일이 들어있습니다.
 make 치면 streak 이라는 실행파일이 생기는데,
@@ -49,7 +46,3 @@ flat과 correlation 이 중요한데, flat 은 1에 가까운 값을 가질수�
 correlation은 현재 streak과 연결된 녀석이 있을 경우 연결되는 녀석의 No 값입니다.
 위의 예에서 보자면 1 번 streak의 correlation 값이 2로 되있으므로
 1번 streak이 2번과 연결되어 있다는 것이고요. -1 은 (더 이상) 연결되는 streak 이 없다는 뜻입니다.
-
-의문나는 부분 있으면 메일 주세요~
-
--김대원

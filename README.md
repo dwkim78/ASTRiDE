@@ -1,18 +1,10 @@
 # ASTRiDE (Automated Streak Detection for High Velocity Objects)
 
-This package is the Python version of the streak detection pipeline
-([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and 
-[https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection))
-originally programmed in C.
+This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
 
-Basic idea is same with the C version, which uses a contour map of a fits image
-to detect streaks. Nevertheless, the Python version has improved algorithm
-for determining whether each edge (i.e. each contour) in the contour map is a streak or not
-For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
+Basic idea is same with the C version, which uses a contour map of a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each edge (i.e. each contour) in the contour map is a streak or not For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
-<b>Note</b>: Although ASTRiDE's acronym include "High Velocity Objects" (because
-it is the title of the published paper), ASTRiDE aims to detect any
-kind of streaks whose lengths are either short or long.
+<b>Note</b>: Although ASTRiDE's acronym include "High Velocity Objects" (because it is the title of the published paper), ASTRiDE aims to detect any kind of streaks whose lengths are either short or long.
 
 
 ## Index
@@ -21,6 +13,7 @@ kind of streaks whose lengths are either short or long.
 3. [Test the Installation](#3-test)
 4. [How to Use ASTRiDE](#4-how-to-use-astride)
 5. [Test with Crowded Field Image](#5-test-with-crowded-field-image)
+6. [System Requirement](#6-system-requirement)
 
 - [ChangeLog](#changelog)
 - [Citation](#citation)
@@ -65,9 +58,7 @@ Or,
 pip install git+https://github.com/dwkim78/ASTRiDE
 ```
 
-If you do not want to install/upgrade the dependencies,
-execute the above commend with the ```--no-deps``` option.
-ASTRiDE possibly works with older version of Python and other libraries. 
+If you do not want to install/upgrade the dependencies, execute the above commend with the ```--no-deps``` option. ASTRiDE possibly works with older version of Python and other libraries. 
 
 
 Alternatively, you can download the ASTRiDE package from the Git repository as:
@@ -79,14 +70,12 @@ cd ASTRiDE
 python setup.py install
 ```
 
-You can edit ```setup.py```, if you do not want to update 
-your own Python libraries (i.e. edit the ```install_requires``` variable).
+You can edit ```setup.py```, if you do not want to update your own Python libraries (i.e. edit the ```install_requires``` variable).
 
 
 ## 3. Test
 
-To check if ASTRiDE is correctly installed, type following commands in 
-your Python console.
+To check if ASTRiDE is correctly installed, type following commands in your Python console.
 
 ```python
 from astride import test
@@ -103,14 +92,12 @@ The command will print messages like:
 2016-02-15 16:16:20,048 INFO - Done.
 ```
 
-The test module will also save figures and write information of detected 
-streaks under the "./long/" folder. In the folder, you can find two images
-and one text file. The two images are:
+The test module will also save figures and write information of detected streaks under the "./long/" folder. In the folder, you can find two images and one text file. The two images are:
 
 | Image name | Description |
 |----:|:------------|
 | all.png |  An entire fit image with detected streak (shown below) |
-| 1.png | A zoomed image for each linked streak |
+| 1.png | A zoomed image of the linked streak |
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all.png">
@@ -124,8 +111,8 @@ The output text file named as "streaks.txt" contains following information.
 | ID  | Index |
 | x_center, y_center  | Coordinate of the center  |
 | area  | Area inside a streak  |
-| perimeter  | Length of perimeter of a streak  |
-| shape_factor  | 4 * PI * 'area' / 'perimeter'^2 |
+| perimeter  | Length of the perimeter of a streak  |
+| shape_factor  | 4 * PI * area / perimeter^2 |
 | radius_deviation  | Parameter to check roundness  |
 | slope  | Slope of a linear line fitted to a streak  |
 | intercept  | Intercept of a linear line fitted to a streak  |
@@ -134,8 +121,7 @@ The output text file named as "streaks.txt" contains following information.
 
 ## 4. How to Use ASTRiDE? 
 
-In this section, I will show how to use ASTRiDE to detect streaks. I will use
-the fits image shown in the previous section.
+In this section, I will show how to use ASTRiDE to detect streaks. I will use the fits image shown in the previous section.
 
 ### Create Streak Instance
 
@@ -160,10 +146,7 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | connectivity_angle | The maximum angle to link each edge (i.e. each contour) |
 | output_path  | An output path to save figures and outputs |
 
-Although you can customize pretty much everything of the Streak instance, 
-I recommend to leave them as they are.
-Hereinafter, the term "edge" means each contour from the contour map derived
-from a fits image. Some of these options are explained in the following sections.
+Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are. Hereinafter, the term "edge" means each contour from the contour map derived from a fits image. Some of these options are explained in the following sections.
 
 ### Detect Streaks
 
@@ -177,27 +160,17 @@ streak.detect()
 That's it! The above one-line command will do everything needed to detect streaks. Nevertheless, in order to detect streaks, the Streak instance does as follows:
 
   * Background removal
-    * We first remove background from the fits image. The background map
-    is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html).
-    It calculates the map by sigma-clipping method within the box of the
-    size "bkg_box_size". 
+    * We first remove background from the fits image. The background map is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html). It calculates the map by sigma-clipping method within the box of the size "bkg_box_size". 
   
   * Contour map
-    * Using the [scikit-image](http://scikit-image.org/), we derive
-    the contour map of the fits image. The level of the contour
-    is controlled by the "contour_threshold" value, such as:
-    contour_threshold * background standard deviation (calculated
-    when deriving the background map). Default "contour_threshold" is 3.
-    The following images shows all the edges detected using the contour map.
+    * Using the [scikit-image](http://scikit-image.org/), we derive the contour map of the fits image. The level of the contour is controlled by the "contour_threshold" value, such as: contour_threshold * background standard deviation (calculated when deriving the background map). Default "contour_threshold" is 3. The following images shows all the edges detected using the contour map.
     
     <div align="center">
     <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
     [ All the edges (color-coded) derived using the contour map ]</div>
   
   * Streak determination based on the morphologies of each contour (i.e. edge)
-    * As you can see from the above figure, there are many edges of 
-    star-like sources that are definitely <b>not</b> streaks. We remove such
-    star-like sources by using the morphologies of each edge such as:
+    * As you can see from the above figure, there are many edges of star-like sources that are definitely <b>not</b> streaks. We remove such star-like sources by using the morphologies of each edge such as:
     
 | Morphology | Description |
 |----:|:------------|
@@ -212,22 +185,7 @@ The following figure shows the remaining two streak after these cut.
 [ Two streaks after the morphology cut. The numbers are their IDs. ]</div>
   
   * Link streaks by their slopes
-    * We finally detected two streaks. However, as you can see, these two
-    streaks are not really separated two streaks. They seems to be
-    one streak, but separately detected since the middle part of
-    the streak is disconnected. This could happen for fast moving objects.
-    We connect (i.e. link) such streaks by their slopes derived from
-    linear line fitting. If their slopes are within the "connectivity_angle",
-    and also the slope between the two centers of the two streaks are within
-    the "connectivity_angle" with each streak, we then
-    determine that the two streaks are connected. This is why
-    the "all.png" shown in the [section "Test"](#3-test)
-    has only one red dashed-line box around the two streaks. 
-    If one streak (i.e. s1) is determined to be linked
-    with another streak (i.e. s2), s1's "connectivity" value is the index
-    of s2. If s2 is again linked with s3, then again s2's "connectivity"
-    is the index of s3. If s3 is not linked with any other streaks,
-    s3's "connectivity" is -1.
+    * We finally detected two streaks. However, as you can see, these two streaks are not really separated two streaks. They seems to be one streak, but separately detected since the middle part of the streak is disconnected. This could happen for fast moving objects. We connect (i.e. link) such streaks by their slopes derived from linear line fitting. If their slopes are within the "connectivity_angle", and also the slope between the two centers of the two streaks are within the "connectivity_angle" with each streak, we then determine that the two streaks are connected. This is why the "all.png" shown in the [section "Test"](#3-test) has only one red dashed-line box around the two streaks. If one streak (i.e. s1) is determined to be linked with another streak (i.e. s2), s1's "connectivity" value is the index of s2. If s2 is again linked with s3, then again s2's "connectivity" is the index of s3. If s3 is not linked with any other streaks, s3's "connectivity" is -1.
      
      
 Note that all the information derived during the streak detection procedures are accessible using the Streak instance 
@@ -243,22 +201,17 @@ streak.plot_figures()
 streak.write_outputs()
 ```
 
-This will generate figures including "all.png", and an individual
-figure for each linked streak. A Filename of each individual file
-is the first index among the indices of the linked streak such as "1.png"
-shown below.
+This will generate figures including "all.png", and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png". "1.png" is shown below.
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png"></div>
 
-The command shown above will also write an output text file, "streaks.txt",
-which is explained in the [section "Test"](#3-test).
+The command shown above will also write an output text file, "streaks.txt", which is explained in the [section "Test"](#3-test).
 
 
 ### Accessible Information Inside the Streak Instance
 
-The streak instance also contains many information derived during the 
-detection processes such as:
+The streak instance - after calling "detect()" function - contains many information such as:
 
 | Variable | Description |
 |----:|:------------|
@@ -269,9 +222,7 @@ detection processes such as:
 | streak.streaks | The final list of streaks |
 
 
-Among these, ```streak.streaks``` contains a list of detected streaks. 
-Each element has all the information that "streaks.txt" has. 
-It also contains additional information such as:
+Among these, ```streak.streaks``` contains a list of detected streaks. Each element has all the information that "streaks.txt" has. It also contains additional information such as:
 
 | Variable | Description |
 |----:|:------------|
@@ -285,39 +236,33 @@ Using the above information, you can make your own figures if needed.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used a less crowded field image. The following images
-show the results using a relatively crowded field image.
+The example shown above used a less crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' edge are attached to each other so that recognized as a streak. We applied ASTRiDE to a relatively crowded field image to check its results. The following images show the results.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
 [ Streak detection test using the crowded field image ]</div>
 
-As you can see, ASTRiDE successfully excluded all the stars and 
-detected two very short streaks that are quite hard to be detected even by
-visual examination.
+All the three images shown above are automatically generated by ASTRiDE. As you can see, ASTRiDE successfully excluded all the stars and detected two very short streaks that are quite hard to be detected even by visual examination.
+
+### 6. System Requirement
+ 
+Any decent or even old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies according to the size of fit images and the crowdedness of the image. For the two examples shown in the previous sections, it took 0.6 sec and 2.6 sec to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD.
 
 
 ### Note
 
-As you might notice, ASTRiDE does
-not use any source detection algorithm (e.g. Source Extractor) to distinguish
-stars from streaks. This is because such algorithms often find stellar-like-sources
-<b>inside</b> a streak. For instance, see the following figure.
+As you might notice, ASTRiDE does not use any source detection algorithm (e.g. Source Extractor) to distinguish stars from streaks. This is because such algorithms often find stellar-like-sources <b>inside</b> a streak. For instance, see the following figure.
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/source_detection.png">
 [ Source Detection ]</div>
 
-Thus we cannot use such source detection algorithms to remove stars before 
-detecting streaks. One could think of using each detected source to
-detect streaks by somehow connecting them. Such method, however, would not
-be successful either for 1) short streaks, or 2) crowded field.
+Thus we cannot use such source detection algorithms to remove stars before detecting streaks. One could think of using each detected source to detect streaks by somehow connecting them. Such method, however, would not be successful either for 1) short streaks, or 2) crowded field.
 
 
 ### Logger
 
-If you want to write log messages either to console or to disk, 
-you can use the ASTRiDE Logger class as:
+If you want to write log messages either to console or to disk, you can use the ASTRiDE Logger class as:
 
 ```python
 from astride import Logger
@@ -331,17 +276,13 @@ logger.error('error message')
 logger.critical('critical message')
 ```
 
-Keep in mind that you need to generate only one logger instance 
-through the whole processes, but not many.
-If you want to save log messages to a file, 
-generate a logger instance as follows:
+Keep in mind that you need to generate only one logger instance through the whole processes, but not many. If you want to save log messages to a file, generate a logger instance as follows:
  
  ```python
  logger = Logger('/PATH/TO/FILE.log').getLogger()
  ```
 
-This will send log messages to both console and a log file.
-Note that the path must be the absolute path.
+This will send log messages to both console and a log file. Note that the path must be the absolute path.
 
 ## ChangeLog
 
@@ -352,3 +293,5 @@ Note that the path must be the absolute path.
  - initiate the GitHub repository.
 
 ## Citation
+
+If you use this package for science publication, we will appreciate a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to this github repository.
