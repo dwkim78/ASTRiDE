@@ -198,19 +198,59 @@ In order to detect streaks, the Streak instance does as follows:
 | Morphology | Description |
 |----:|:------------|
 | Shape Factor | [Circularity](https://goo.gl/Z0Jy9z). The circularity of a circle is 1, and streak-like shape has much smaller circularity than 1. We set 0.2 as a threshold (i.e. option "shape_cut") |
-| Radius Deviation | A approximated deviation from roundness. Since we know the center of each edge, we can calculate distances to each data point from the center. We define a radius as the median value of the distances. We then calculate (the standard deviation of distances - radius) / radius. We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
+| Radius Deviation | An approximated deviation from roundness. Since we know the center of each edge, we can calculate distances to each data point from the center. We define a radius as the median value of the distances. We then calculate (the standard deviation of distances - radius) / radius. We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
 | Area | The area must larger than 10 pixels (i.e. option "area_cut"). |
 
 The following figure shows the remaining two streak after these cut.
  
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/two_streaks.png">
-[ Two streaks after the morphology cut ]</div>
+[ Two streaks after the morphology cut. The numbers are their IDs. ]</div>
   
   4. Link streaks by their slopes
-    * We finally detected two streaks.
+    * We finally detected two streaks. However, as you can see, these two
+    streaks are not really separated two streaks. They seems to be
+    one streak, but separately detected since the middle part of
+    the streak is disconnected. This could happen for fast moving objects.
+    We connect (i.e. link) such streaks by their slope derived from a
+    linear line fitting. If their slope is within the "connectivity_angle"
+    and also the slope of the centers of the two streaks are within
+    the "connectivity_angle" with the slopes of each streak, we
+    assume that the two streaks are connected. This is why
+    the following figure has one red dashed line box around
+    the two streaks. If one streak (i.e. s1) is determined to be linked
+    with another streak (i.e. s2), s1's "connectivity" value is the index
+    of s1. If s2 is linked with s3, then again s2's "connectivity"
+    is the index of s3. If s3 is not linked with streak any more,
+    s3's "connectivity" is -1.
+     
+     
+Note that all these information are accessible using the Streak instance 
+(See []().)
 
-### Accessible Information inside the Streak instance
+### Plot Figures and Write Outputs
+    
+We provide modules to plot figures and write outputs as:
+
+```python
+streak.plot_figures()
+
+streak.write_outputs()
+```
+
+This will generate figures including "all.png", and an individual
+figure for each linked streak. A Filename of each individual file
+is the first index among the indices of the linked streak such as "1.png"
+
+<div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png">
+[ 1.png ]</div>
+
+The command shown above will also write an output text file, "streaks.txt"
+containing many values of each streak.
+
+
+### Accessible Information Inside the Streak Instance
 
 The streak instance also contains many information derived during the 
 detection processes such as:
