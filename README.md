@@ -213,15 +213,16 @@ The following figure shows the remaining two streak after these cut.
     one streak, but separately detected since the middle part of
     the streak is disconnected. This could happen for fast moving objects.
     We connect (i.e. link) such streaks by their slope derived from a
-    linear line fitting. If their slope is within the "connectivity_angle"
-    and also the slope of the centers of the two streaks are within
-    the "connectivity_angle" with the slopes of each streak, we
-    assume that the two streaks are connected. This is why
-    the following figure has one red dashed line box around
-    the two streaks. If one streak (i.e. s1) is determined to be linked
+    linear line fitting. If their slopes are within the "connectivity_angle",
+    and also the slope between the two centers of the two streaks are within
+    the "connectivity_angle" with each streak, we then
+    determine that the two streaks are connected. This is why
+    the "all.png" shown in the [section "Test"](#3-test)
+    has only one red dashed-line box around the two streaks. 
+    If one streak (i.e. s1) is determined to be linked
     with another streak (i.e. s2), s1's "connectivity" value is the index
-    of s1. If s2 is linked with s3, then again s2's "connectivity"
-    is the index of s3. If s3 is not linked with streak any more,
+    of s2. If s2 is again linked with s3, then again s2's "connectivity"
+    is the index of s3. If s3 is not linked with any other streaks,
     s3's "connectivity" is -1.
      
      
@@ -280,8 +281,8 @@ Using the above information, you can make your own figures if needed.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used less crowded field image. The following results
-is using more crowded field image.
+The example shown above used less crowded field image. The following images
+show the results using more crowded field image.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
