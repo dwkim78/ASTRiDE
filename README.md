@@ -268,7 +268,7 @@ Among these, ```streak.streaks``` contains a list of detected streaks.
 Each element has all the information that "streaks.txt" has. 
 It also contains additional information such as:
 
-| Options | Description |
+| Variable | Description |
 |----:|:------------|
 | x | X coordinates of a streak |
 | y | Y coordinates of a streak |
@@ -276,6 +276,20 @@ It also contains additional information such as:
 | y_min and y_max | The minimum and maximum y coordinates of a streak |
 
 Using the above information, you can make your own figures if needed.
+
+
+### 5. Test with Crowded Field Image
+
+The example shown above used less crowded field image. The following results
+is using more crowded field image.
+ 
+ <div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
+[ Streak detection test using the crowded field image ]</div>
+
+As you can see, ASTRiDE successfully excluded all the stars and 
+detected two very short streaks that are quite hard to be detected even by
+visual examination.
 
 
 ### Note
@@ -293,9 +307,6 @@ Thus we cannot use such source detection algorithms to remove stars before
 detecting streaks. One could think of using each detected source to
 detect streaks by somehow connecting them. Such method, however, would not
 be successful either for 1) short streaks, or 2) crowded field.
-
-
-### 5. Test with Crowded Field Image
 
 
 ### Logger
