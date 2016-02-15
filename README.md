@@ -9,7 +9,12 @@ Basic idea is same with the C version, which uses a contour map of a fits image
 to detect streaks. Nevertheless, the Python version has an improved algorithm
 to determine whether each edge (i.e. each contour) 
 in the contour map is a streak or not
-For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)". 
+For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
+ 
+<b>Note</b>: Although ASTRiDE's acronym include "High Velocity Objects" (because
+it is the title of the published paper), ASTRiDE aims to detect any
+kind of streaks either short or long.
+
 
 ## Index
 1. [Dependency](#1-dependency)
