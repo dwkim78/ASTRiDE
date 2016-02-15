@@ -14,7 +14,7 @@ For details, see the section "[Algorithm](#6-algorithm)".
 1. [Dependency](#1-dependency)
 2. [Installation](#2-installation)
 3. [Test the Installation](#3-test)
-4. [How to Use ASTRiDE](#4-pseudo-code-how-to-use-astride)
+4. [How to Use ASTRiDE](#4-how-to-use-astride)
 5. [Algorithm](#5-algorithm)
 
 - [ChangeLog](#changelog)
@@ -85,7 +85,7 @@ from astride import test
 test()
 ```
 
-This command will returns outputs as:
+The command will print messages like:
 ```
 2016-02-15 16:16:18,239 INFO - Start.
 2016-02-15 16:16:18,241 INFO - Read a fits file..
@@ -100,18 +100,30 @@ and one text file. The two images are:
 
 | Image name | Description |
 |----:|:------------|
-| all.png |  An entire fit image with detected streak. |
-| 1.png | A zoomed image for each streak. |
+| all.png |  An entire fit image with detected streak |
+| 1.png | A zoomed image for each linked streak |
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all.png">
 [ all.png ]</div>
-<div align="center">
-<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png">
-[ 1.png ]</div>
 
+I will explain details about the figures in the following section.
 
-## 4. Pseudo Code: How to Use ASTRiDE? 
+The output text file named as "streak.txt" contains following information.
+
+| Column | Description |
+|----:|:------------|
+| ID  | Index |
+| x_center, y_center  | Coordinate of the center  |
+| area  | Area inside a streak  |
+| perimeter  | Length of perimeter of a streak  |
+| shape_factor  | 4 * PI * 'area' / 'perimeter'^2 |
+| radius_deviation  | Parameter to check roundness  |
+| slope  | Slope of a linear line fitted to a streak  |
+| intercept  | Intercept of a linear line fitted to a streak  |
+| connectivity  | ID of another streak that is likely to be linked to the current streak  |
+
+## 4. How to Use ASTRiDE? 
 
 ## 5. Algorithm
 
