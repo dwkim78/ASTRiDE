@@ -103,7 +103,7 @@ The test module will also save figures and write information of detected streaks
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all.png">
 [ all.png ]</div>
 
-
+<br/><br/>
 The output text file named as "streaks.txt" contains following information.
 
 | Column | Description |
@@ -184,6 +184,7 @@ The following figure shows the remaining two streak after these cut.
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/two_streaks.png">
 [ Two streaks after the morphology cut. The numbers are their IDs. ]</div>
   
+  
   * Link streaks by their slopes
     * We finally detected two streaks. However, as you can see, these two streaks are not really separated two streaks. They seems to be one streak, but separately detected since the middle part of the streak is disconnected. This could happen for fast moving objects. We connect (i.e. link) such streaks by their slopes derived from linear line fitting. If their slopes are within the "connectivity_angle", and also the slope between the two centers of the two streaks are within the "connectivity_angle" with each streak, we then determine that the two streaks are connected. This is why the "all.png" shown in the [section "Test"](#3-test) has only one red dashed-line box around the two streaks. If one streak (i.e. s1) is determined to be linked with another streak (i.e. s2), s1's "connectivity" value is the index of s2. If s2 is again linked with s3, then again s2's "connectivity" is the index of s3. If s3 is not linked with any other streaks, s3's "connectivity" is -1.
      
@@ -256,6 +257,7 @@ As you might notice, ASTRiDE does not use any source detection algorithm (e.g. S
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/source_detection.png">
 [ Red circles are the sources detected by a source detection algorithm (i.e. daofind-like algorithm) ]</div>
+
 
 Thus we cannot use such source detection algorithms to remove stars before detecting streaks. One could think of using each detected source to detect streaks by somehow connecting them. Such method, however, would not be successful either for 1) short streaks, or 2) crowded field.
 
