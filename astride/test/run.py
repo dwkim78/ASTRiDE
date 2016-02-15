@@ -1,57 +1,32 @@
-import pylab as pl
-import numpy as np
+from os.path import dirname
+from os.path import join
 
-from skimage import measure
-from photutils.background import Background
-
-from astride.datasets.base import read_fits
-from astride.edge import EDGE
+from astride.detect import Streak
+from astride.utils.logger import Logger
 
 
-def run():
-    data = read_fits().astype(np.float64)
+def test():
+    logger = Logger().getLogger()
 
-    # Get background map and subtract.
-    bkg = Background(data, (30, 30), filter_shape=(3, 3), method='median')
-    data -= bkg.background
+    logger.info('Start.')
+    module_path = dirname(__file__)
+    file_path = join(module_path, '../datasets/samples', 'long.fits')
 
-    # Plot.
-    cut_threshold = 0.5
-    med = np.median(data)
-    std = np.std(data)
-    plot_data = data.copy()
-    plot_data[np.where(data > med + cut_threshold * std)] = \
-        med + cut_threshold * std
-    plot_data[np.where(data < med - cut_threshold * std)] = \
-        med - cut_threshold * std
-    pl.figure(figsize=(14,12))
-    pl.imshow(plot_data, origin='lower', cmap='gray')
+    logger.info('Read a fits file..')
+    streak = Streak(file_path)
 
-    # Find contours.
-    contours = measure.find_contours(
-            data, bkg.background_rms_median * 3.,
-            fully_connected='high'
-                                     )
+    logger.info('Search streaks..')
+    streak.detect()
 
-    # Quantify shapes of the contours.
-    edge = EDGE(contours)
-    edge.quantify()
-    edges = edge.get_edges()
+    logger.info('Save figures and write outputs to %s' %
+                streak.output_path)
+    streak.plot_figures()
+    streak.write_outputs()
 
-    # Plot all contours found.
-    for n, edge in enumerate(edges):
-        pl.plot(edge['positions'][::, 1], edge['positions'][::, 0])
-        #pl.text(edge['positions'][::, 1][0], edge['positions'][::, 0][0],
-        #        '%.2f' % (edge['shape_factor']))
+    logger.info('Done.')
 
-    pl.xlabel('X/pixel')
-    pl.ylabel('Y/pixel')
-    pl.axis([0, data.shape[0], 0, data.shape[1]])
-    pl.show()
+    logger.handlers = []
 
-    shape_factors = [edge['shape_factor'] for edge in edges]
-    pl.hist(shape_factors, bins=30)
-    pl.show()
 
 if __name__ == '__main__':
-    run()
+    test()
