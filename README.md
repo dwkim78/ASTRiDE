@@ -76,6 +76,41 @@ your own Python libraries (i.e. edit the ```install_requires``` variable).
 
 ## 3. Test
 
+To check if ASTRiDE is correctly installed, type following commands in 
+your Python console.
+
+```python
+from astride import test
+
+test()
+```
+
+This command will returns outputs as:
+```
+2016-02-15 16:16:18,239 INFO - Start.
+2016-02-15 16:16:18,241 INFO - Read a fits file..
+2016-02-15 16:16:18,272 INFO - Search streaks..
+2016-02-15 16:16:19,027 INFO - Save figures and write outputs to ./long/
+2016-02-15 16:16:20,048 INFO - Done.
+```
+
+The test module will also save figures and write information of detected 
+streaks under the "./long/" folder. In the folder, you can find two images
+and one text file. The two images are:
+
+| Image name | Description |
+|----:|:------------|
+| all.png |  An entire fit image with detected streak. |
+| 1.png | A zoomed image for each streak. |
+
+<div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all.png">
+[ all.png ]</div>
+<div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png">
+[ 1.png ]</div>
+
+
 ## 4. Pseudo Code: How to Use ASTRiDE? 
 
 ## 5. Algorithm
