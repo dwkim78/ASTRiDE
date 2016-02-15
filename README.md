@@ -6,14 +6,13 @@ This package is the Python version of the streak detection pipeline
 originally programmed in C.
 
 Basic idea is same with the C version, which uses a contour map of a fits image
-to detect streaks. Nevertheless, the Python version has an improved algorithm
-to determine whether each edge (i.e. each contour) 
-in the contour map is a streak or not
+to detect streaks. Nevertheless, the Python version has improved algorithm
+for determining whether each edge (i.e. each contour) in the contour map is a streak or not
 For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
 <b>Note</b>: Although ASTRiDE's acronym include "High Velocity Objects" (because
 it is the title of the published paper), ASTRiDE aims to detect any
-kind of streaks either short or long.
+kind of streaks whose lengths are either short or long.
 
 
 ## Index
@@ -164,26 +163,26 @@ You can replace "long.fits" with your own fits filename. There are many options 
 Although you can customize pretty much everything of the Streak instance, 
 I recommend to leave them as they are.
 Hereinafter, the term "edge" means each contour from the contour map derived
-from a fits image.
+from a fits image. Some of these options are explained in the following sections.
 
 ### Detect Streaks
 
-We can now detect streaks in the fits image as:
+We can detect streaks in the fits image as:
 
 ```python
 
 streak.detect()
 ```
 
-In order to detect streaks, the Streak instance does as follows:
+That's it! The above one-line command will do everything needed to detect streaks. Nevertheless, in order to detect streaks, the Streak instance does as follows:
 
-  1. Background removal
+  * Background removal
     * We first remove background from the fits image. The background map
     is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html).
     It calculates the map by sigma-clipping method within the box of the
     size "bkg_box_size". 
   
-  2. Contour map
+  * Contour map
     * Using the [scikit-image](http://scikit-image.org/), we derive
     the contour map of the fits image. The level of the contour
     is controlled by the "contour_threshold" value, such as:
@@ -191,11 +190,11 @@ In order to detect streaks, the Streak instance does as follows:
     when deriving the background map). Default "contour_threshold" is 3.
     The following images shows all the edges detected using the contour map.
     
-<div align="center">
-<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
-[ All the edges (color-coded) derived using the contour map ]</div>
+    <div align="center">
+    <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
+    [ All the edges (color-coded) derived using the contour map ]</div>
   
-  3. Streak detection based on the morphologies of each contour (i.e. edge)
+  * Streak detection based on the morphologies of each contour (i.e. edge)
     * As you can see from the above figure, there are many edges of 
     star-like sources that are definitely <b>not</b> streaks. We remove such
     star-like sources by using the morphologies of each edge such as:
@@ -212,7 +211,7 @@ The following figure shows the remaining two streak after these cut.
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/two_streaks.png">
 [ Two streaks after the morphology cut. The numbers are their IDs. ]</div>
   
-  4. Link streaks by their slopes
+  * Link streaks by their slopes
     * We finally detected two streaks. However, as you can see, these two
     streaks are not really separated two streaks. They seems to be
     one streak, but separately detected since the middle part of
