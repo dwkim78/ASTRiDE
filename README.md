@@ -226,7 +226,7 @@ The following figure shows the remaining two streak after these cut.
      
      
 Note that all these information are accessible using the Streak instance 
-(See []().)
+(See [this section](#accessible-information-inside-the-streak-instance).)
 
 ### Plot Figures and Write Outputs
     
@@ -241,10 +241,10 @@ streak.write_outputs()
 This will generate figures including "all.png", and an individual
 figure for each linked streak. A Filename of each individual file
 is the first index among the indices of the linked streak such as "1.png"
+shown below.
 
 <div align="center">
-<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png">
-[ 1.png ]</div>
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png"></div>
 
 The command shown above will also write an output text file, "streaks.txt"
 containing many values of each streak.
