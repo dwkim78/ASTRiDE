@@ -194,7 +194,7 @@ That's it! The above one-line command will do everything needed to detect streak
     <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
     [ All the edges (color-coded) derived using the contour map ]</div>
   
-  * Streak detection based on the morphologies of each contour (i.e. edge)
+  * Streak determination based on the morphologies of each contour (i.e. edge)
     * As you can see from the above figure, there are many edges of 
     star-like sources that are definitely <b>not</b> streaks. We remove such
     star-like sources by using the morphologies of each edge such as:
@@ -202,8 +202,8 @@ That's it! The above one-line command will do everything needed to detect streak
 | Morphology | Description |
 |----:|:------------|
 | Shape Factor | [Circularity](https://goo.gl/Z0Jy9z). The circularity of a circle is 1, and streak-like shape has much smaller circularity than 1. We set 0.2 as a threshold (i.e. option "shape_cut") |
-| Radius Deviation | An approximated deviation from roundness. Since we know the center of each edge, we can calculate distances to each data point from the center. We define a radius as the median value of the distances. We then calculate (the standard deviation of distances - radius) / radius. We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
-| Area | The area must larger than 10 pixels (i.e. option "area_cut"). |
+| Radius Deviation | An approximated deviation from roundness. Since we know the center of each edge, we can calculate distances to each data point from the center. We define a radius as the median value of the distances. We then calculate std(distances - radius) / radius. "std()" is the standard deviation. We set 0.5 as a threshold (i.e. option "radius_dev_cut"). |
+| Area | The area inside an edge must be larger than 10 pixels (i.e. option "area_cut"). |
 
 The following figure shows the remaining two streak after these cut.
  
@@ -216,7 +216,7 @@ The following figure shows the remaining two streak after these cut.
     streaks are not really separated two streaks. They seems to be
     one streak, but separately detected since the middle part of
     the streak is disconnected. This could happen for fast moving objects.
-    We connect (i.e. link) such streaks by their slope derived from a
+    We connect (i.e. link) such streaks by their slopes derived from
     linear line fitting. If their slopes are within the "connectivity_angle",
     and also the slope between the two centers of the two streaks are within
     the "connectivity_angle" with each streak, we then
@@ -230,8 +230,8 @@ The following figure shows the remaining two streak after these cut.
     s3's "connectivity" is -1.
      
      
-Note that all these information are accessible using the Streak instance 
-(See [this section](#accessible-information-inside-the-streak-instance).)
+Note that all the information derived during the streak detection procedures are accessible using the Streak instance 
+(See [this section](#accessible-information-inside-the-streak-instance)).
 
 ### Plot Figures and Write Outputs
     
@@ -251,8 +251,8 @@ shown below.
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png"></div>
 
-The command shown above will also write an output text file, "streaks.txt"
-containing many values of each streak.
+The command shown above will also write an output text file, "streaks.txt",
+which is explained in the [section "Test"](#3-test).
 
 
 ### Accessible Information Inside the Streak Instance
@@ -285,8 +285,8 @@ Using the above information, you can make your own figures if needed.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used less crowded field image. The following images
-show the results using more crowded field image.
+The example shown above used a less crowded field image. The following images
+show the results using a relatively crowded field image.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
