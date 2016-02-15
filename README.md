@@ -130,8 +130,8 @@ The output text file named as "streaks.txt" contains following information.
 
 ## 4. How to Use ASTRiDE? 
 
-In this section, I will show how to use ASTRiDE to detect streak. I will use
-the fits image shown in the previous section (i.e. all.png).
+In this section, I will show how to use ASTRiDE to detect streaks. I will use
+the fits image shown in the previous section.
 
 ### Create Streak Instance
 
