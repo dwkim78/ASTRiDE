@@ -264,7 +264,21 @@ The following images shows some more applications.
 
 | [ESO DSS2](http://archive.eso.org/dss/dss) image | The Horsehead Nebular |
 |---|---|
-| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/dss2.png" width="500"><br/>[ Three streaks are detected but only one looks like a real streak (i.e. ID=2)]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="580"><br/>[ No streak is detected. ]</div> |
+| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/dss2.png" width="500"><br/>[ Three streaks are detected. ]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="580"><br/>[ No streak is detected. ]</div> |
+
+
+In the case of the ESO DSS2 image (left panel), ASTRiDE detected three streaks. However, only one streak (i.e. ID=2) looks like a real streak. In the following table, we show some parameters derived by ASTRiDE.
+
+| ID | Area | Perimeter | Shape Factor | Radius Deviation |
+|---:|------|-----------|--------------|------------------|
+|1   | 75.1 |   74.4    | 0.17         |  0.57            |
+|2   | 640.3|   360.9   | 0.06         |  0.60            |
+|3   | 21.6 |   38.8    | 0.18         |  0.52            |
+  
+As you can clearly see, the streak with ID=2 is longer than two others, and also have a lot smaller shape factor than others. All these variables are accessible using the Streak instance, so you can define your own criteria according to the property and quality of your images.
+
+
+In the case of the Horsehead Nebular image (right panel), it seems natural that ASTRiDE does not detect any streaks in the image.
 
 
 ### System Requirement
