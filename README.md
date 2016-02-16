@@ -147,14 +147,14 @@ You can replace "long.fits" with your own fits filename. There are many options 
 
 | Options | Description |
 |----:|:------------|
-| bkg_box_size  | Box size for calculating a background map of a fits image |
-| contour_threshold  | Threshold to extract a contour map |
-| min_points  | The minimum number of data points in each contour in the contour map
-| shape_cut  | Empirical cut for shape factor |
+| bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. |
+| contour_threshold  | Threshold to extract a contour map. If this value is high, then only bright streaks will be detected. Default is 3. |
+| min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10. |
+| shape_cut  | Empirical cut for shape factor. Default is 0.2. |
 | area_cut | Empirical cut for area inside each contour |
-| radius_dev_cut  | Empirical cut for radius deviation |
-| connectivity_angle | The maximum angle to link each streak |
-| output_path  | Output path to save figures and outputs |
+| radius_dev_cut  | Empirical cut for radius deviation. Default is 10. |
+| connectivity_angle | The maximum angle to link each streak. Default is 3. |
+| output_path  | Output path to save figures and outputs. Default is the 'None', which will create a folder of the input filename. |
 
 Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are. Some of these options are explained in the following sections.
 
