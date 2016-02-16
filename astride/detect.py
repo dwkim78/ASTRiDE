@@ -43,7 +43,7 @@ class Streak:
         # Background removed image.
         self.image = None
         # Raw edges
-        self.raw_edges = None
+        self.raw_borders = None
         # Filtered edges, so streak, by their morphologies and
         # also connected (i.e. linked) by their slope.
         self.streaks = None
@@ -99,7 +99,7 @@ class Streak:
                     radius_dev_cut=self.radius_dev_cut,
                     connectivity_angle=self.connectivity_angle)
         edge.quantify()
-        self.raw_edges = edge.get_edges()
+        self.raw_borders = edge.get_edges()
 
         # Filter the edges, so only streak remains.
         edge.filter_edges()

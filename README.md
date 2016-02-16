@@ -7,7 +7,7 @@
 <br/>
 This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
 
-Basic idea is same with the C version, which uses a contour map of a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each edge (i.e. each contour) in the contour map is a streak or not For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
+Basic idea is same with the C version, which uses a border of each object (i.e. a contour of a certain level) in a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each border (i.e. a contour) is a streak or not. For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
 The published paper title includes "High Velocity Objects", which means relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long. That is why the acronym, ASTRiDE, does not include "High Velocity Objects". 
 
@@ -149,10 +149,10 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | shape_cut  | An empirical cut for shape factor |
 | area_cut | An empirical cut for area inside each contour |
 | radius_dev_cut  | An empirical cut for radius deviation |
-| connectivity_angle | The maximum angle to link each edge (i.e. each contour) |
+| connectivity_angle | The maximum angle to link each border (i.e. each contour) |
 | output_path  | An output path to save figures and outputs |
 
-Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are. Hereinafter, the term "edge" means each contour from the contour map derived from a fits image. Some of these options are explained in the following sections.
+Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are. Hereinafter, the term "border" means each contour from the contour map derived from a fits image. Some of these options are explained in the following sections.
 
 ### Detect Streaks
 
@@ -169,21 +169,21 @@ That's it! The above one-line command will do everything needed to detect streak
     * ASTRiDE first removes background from the fits image. The background map is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html). It calculates the map by sigma-clipping method within the box of the size "bkg_box_size". 
   
   * Contour map
-    * Using the [scikit-image](http://scikit-image.org/), ASTRiDE derives the contour map of the fits image. The level of the contour is controlled by the "contour_threshold" value, such as: contour_threshold * background standard deviation (calculated when deriving the background map). Default "contour_threshold" is 3. The following images shows all the edges detected using the contour map.
+    * Using the [scikit-image](http://scikit-image.org/), ASTRiDE derives the contour map of the fits image. The level of the contour is controlled by the "contour_threshold" value, such as: contour_threshold * background standard deviation (calculated when deriving the background map). Default "contour_threshold" is 3. The following images shows all the borders detected using the contour map.
     
     <div align="center">
-    <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_edges.png">
-    [ All the edges (color-coded) derived using the contour map ]</div>
+    <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_borders.png">
+    [ All the borders (color-coded) derived using the contour map ]</div>
   
   <br/>
-  * Streak determination based on the morphologies of each contour (i.e. edge)
-    * As you can see from the above figure, there are many edges of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources by using the morphologies of each edge such as:
+  * Streak determination based on the morphologies of each contour (i.e. border)
+    * As you can see from the above figure, there are many borders of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources by using the morphologies of each border such as:
     
 | Morphology | Description |
 |----:|:------------|
 | Shape Factor | [Circularity](https://goo.gl/Z0Jy9z). The circularity of a circle is 1, and streak-like shape has much smaller circularity than 1. The default threshold is 0.2 (i.e. option "shape_cut") |
-| Radius Deviation | An approximated deviation from roundness. Since the center of each edge is know, ASTRiDE can calculate distances to each data point from the center. A radius is defined as the median value of the distances. ASTRiDE then calculates "roundness_deviation" as std(distances - radius) / radius. "std()" is the standard deviation. For a circle, the value is 0. The default threshold is 0.5 (i.e. option "radius_dev_cut"). |
-| Area | The area inside an edge must be larger than 10 pixels (i.e. option "area_cut"). |
+| Radius Deviation | An approximated deviation from roundness. Since the center of each border is known, ASTRiDE can calculate distances to each data point from the center. A radius is defined as the median value of the distances. ASTRiDE then calculates "roundness_deviation" as std(distances - radius) / radius. "std()" is the standard deviation. For a circle, the value is 0. The default threshold is 0.5 (i.e. option "radius_dev_cut"). |
+| Area | The area inside an border must be larger than 10 pixels (i.e. option "area_cut"). |
 
 The following figure shows the remaining two streak after these cut.
  
@@ -226,7 +226,7 @@ The streak instance - after calling "detect()" function - contains many informat
 | streak.raw_image | Raw fit image before background removal |
 | streak.background_map | Derived background map |
 | streak.image | Background removed image |
-| streak.raw_edges | All the edges detected using a contour map |
+| streak.raw_borders | All the borders detected using a contour map |
 | streak.streaks | The final list of streaks |
 
 
@@ -244,7 +244,7 @@ Using the above information, you can make your own figures if needed.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used a less crowded field image. If there are many stars in the field (i.e. crowded field), it is likely that some stars' edges are attached to each other so that being recognized as a streak. We applied ASTRiDE to a relatively crowded field image to check how ASTRiDE works for such crowded field image. The following images show the results.
+The example shown above used a less crowded field image. If there are many stars in the field (i.e. crowded field), it is likely that some stars' borders are attached to each other so that being recognized as a streak. We applied ASTRiDE to a relatively crowded field image to check how ASTRiDE works for such crowded field image. The following images show the results.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
