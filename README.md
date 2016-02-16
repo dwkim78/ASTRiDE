@@ -131,11 +131,33 @@ These information are accessible using the ASTRiDE Streak instance. For details,
 
 ## 4. How to Use ASTRiDE? 
 
-This section explains how to use ASTRiDE to detect streaks. The fits image shown in the previous section will be used as well.
+This section explains how to use ASTRiDE to detect streaks. The fits image shown in the previous section will be used.
+
+### Pseudo Code
+
+The following pseudo-code shows how to use ASTRiDE.
+
+```python
+# Import the ASTRiDE library.
+from astride import Streak
+
+# Read a fits image and create a Streak instance.
+streak = Streak('YOUR_FITS_FILE_NAME.fits')
+
+# Detect streaks.
+streak.detect()
+
+# Write outputs and plot figures.
+streak.write_outputs()
+streak.plot_figures()
+```
+
+Detailed usages are given in the following sections.
+
 
 ### Create Streak Instance
 
-You first need to create ASTRiDE Streak instance as:
+You first need to import the ASTRiDE library and create a Streak instance as:
 
 ```python
 from astride import Streak
