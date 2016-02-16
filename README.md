@@ -131,7 +131,6 @@ These information are accessible using the ASTRiDE Streak instance. For details,
 
 ## 4. How to Use ASTRiDE? 
 
-This section explains how to use ASTRiDE to detect streaks. The fits image shown in the previous section will be used.
 
 ### Pseudo Code
 
