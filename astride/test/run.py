@@ -20,8 +20,8 @@ def test():
 
     logger.info('Save figures and write outputs to %s' %
                 streak.output_path)
-    streak.plot_figures()
     streak.write_outputs()
+    streak.plot_figures()
 
     logger.info('Done.')
 

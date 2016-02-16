@@ -173,7 +173,7 @@ That's it! The above one-line command will do everything needed to detect streak
     
     <div align="center">
     <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/all_borders.png">
-    [ All the borders (color-coded) derived using the contour map ]</div>
+    [ All the borders (color-coded) extracted using the contour map ]</div>
   
   <br/>
   * Streak determination based on the morphologies of each contour (i.e. border)
@@ -204,17 +204,18 @@ Note that all the information derived during the streak detection procedures are
 ASTRiDE has modules to plot figures and write outputs as:
 
 ```python
-streak.plot_figures()
-
 streak.write_outputs()
+
+streak.plot_figures()
 ```
 
-This will generate figures including "all.png", and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png". "1.png" is shown below.
+```streak.write_outputs()``` will write an output text file, "streaks.txt", which is explained in the [section "Test"](#3-test).
+
+
+```streak.plot_figures()``` will generate figures including "all.png", and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png". "1.png" is shown below.
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png"></div>
-
-The command shown above will also write an output text file, "streaks.txt", which is explained in the [section "Test"](#3-test).
 
 
 ### Accessible Information Inside the Streak Instance
