@@ -92,11 +92,11 @@ test()
 
 The command will print messages like:
 ```
-2016-02-15 16:16:18,239 INFO - Start.
-2016-02-15 16:16:18,241 INFO - Read a fits file..
-2016-02-15 16:16:18,272 INFO - Search streaks..
-2016-02-15 16:16:19,027 INFO - Save figures and write outputs to ./long/
-2016-02-15 16:16:20,048 INFO - Done.
+2016-mm-dd hh:mm:ss,mmm INFO - Start.
+2016-mm-dd hh:mm:ss,mmm INFO - Read a fits file..
+2016-mm-dd hh:mm:ss,mmm INFO - Search streaks..
+2016-mm-dd hh:mm:ss,mmm INFO - Save figures and write outputs to ./long/
+2016-mm-dd hh:mm:ss,mmm INFO - Done.
 ```
 
 The test module will also save figures and write information of detected streaks under the "./long/" folder. In the folder, you can find two images and one text file. The two images are:
