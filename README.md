@@ -131,11 +131,11 @@ These information are accessible using the ASTRiDE Streak instance. For details,
 
 ## 4. How to Use ASTRiDE? 
 
-In this section, I will show how to use ASTRiDE to detect streaks. I will use the fits image shown in the previous section.
+This section explains how to use ASTRiDE to detect streaks. The fits image shown in the previous section will be used as well.
 
 ### Create Streak Instance
 
-We first need to create ASTRiDE Streak instance as:
+You first need to create ASTRiDE Streak instance as:
 
 ```python
 from astride import Streak
@@ -156,11 +156,11 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | connectivity_angle | The maximum angle to link each streak. Default is 3. |
 | output_path  | Output path to save figures and outputs. Default is "None", which will create a folder of the input filename. |
 
-Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
+Although you can customize pretty much everything of the Streak instance, it is recommended to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
 
 ### Detect Streaks
 
-We can detect streaks in the fits image as:
+Now you can detect streaks in the fits image as:
 
 ```python
 
@@ -249,7 +249,7 @@ Using the above information, you can make your own figures if needed.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to other stars, which makes their borders long so that eventually look like a streak. We applied ASTRiDE to a relatively crowded field image to check how ASTRiDE works for such crowded field image. The following images show the results.
+The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to other stars, which makes their borders long so that eventually look like a streak. In order to check how ASTRiDE works for such crowded field image, ASTRiDE is applied to a relatively crowded field image. The following images show the results.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
@@ -267,7 +267,7 @@ The following images show the application results of ASTRiDE.
 | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/dss2.png" width="500"><br/>[ Three streaks are detected. ]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="580"><br/>[ No streak is detected. ]</div> |
 
 
-In the case of the ESO DSS2 image (left panel), ASTRiDE detected three streaks. However, only one streak (i.e. ID=2) looks like a real streak. In the following table, we show some parameters derived by ASTRiDE.
+In the case of the ESO DSS2 image (left panel), ASTRiDE detected three streaks. However, only one streak (i.e. ID=2, bottom center panel) looks like a real streak. The following table shows some parameters derived by ASTRiDE.
 
 | ID | Area | Perimeter | Shape Factor | Radius Deviation |
 |---:|------|-----------|--------------|------------------|
@@ -332,7 +332,7 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## Citation
 
-If you use this package for science publication, we will appreciate a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to the current [github repository](https://github.com/dwkim78/ASTRiDE).
+If you use this package for science publication, a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to the current [github repository](https://github.com/dwkim78/ASTRiDE) would be appreciated.
 
 ## Contact
 
