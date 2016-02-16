@@ -358,3 +358,9 @@ If you use this package for science publication, a citation to the paper [Kim+ 2
 ## Contact
 
 If you have questions, send an email to dwkim78 at gmail. My official webpage is [sites.google.com/site/dwkim78](https://sites.google.com/site/dwkim78/).
+
+
+#### Keywords
+
+astronomy - fits image - streak - satellite - meteor - NEO - fast-moving objects - boundary-tracing - contour-tracing - morphology
+
