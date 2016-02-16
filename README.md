@@ -270,7 +270,7 @@ Using the above information, you can plot your own figures.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to other stars, which makes their borders long so that eventually look like a streak. In order to check how ASTRiDE works for such crowded field image, ASTRiDE is applied to a relatively crowded field image. The following images show the results.
+The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to other stars, which makes their borders long so that eventually look like a streak. In order to check how ASTRiDE works for such crowded field images, ASTRiDE is applied to a relatively crowded-field fits image. The following output images show the results.
  
  <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/crowded_field.png">
