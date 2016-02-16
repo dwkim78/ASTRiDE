@@ -15,7 +15,7 @@ The published paper title includes "High Velocity Objects", which means relative
 ## Index
 1. [Dependency](#1-dependency)
 2. [Installation](#2-installation)
-3. [Test the Installation](#3-test)
+3. [Test the Library](#3-test)
 4. [How to Use ASTRiDE](#4-how-to-use-astride)
 5. [Test with Crowded Field Image](#5-test-with-crowded-field-image)
 6. [Application](#6-application-to-astronomical-images)
@@ -237,7 +237,7 @@ streak.plot_figures()
 ```streak.write_outputs()``` will write an output text file, "streaks.txt", which is explained in the [section "Test"](#3-test).
 
 
-```streak.plot_figures()``` will generate figures including "all.png", and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png" (shown below)
+```streak.plot_figures()``` will generate figures including "all.png" (shown in [this section](#3-test)), and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png" (shown below)
 
 <div align="center">
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/1.png"></div>
