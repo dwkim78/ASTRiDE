@@ -264,7 +264,7 @@ The following images shows some more applications. Images without any red dashed
 
 |  |  |
 |---|---|
-| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="480"><br/>[ The Horse Head nebula. No streak is detected. ]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="480"><br/>[ The Horse Head nebula. No streak is detected. ]</div> |
+| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="560"><br/>[ The Horse Head nebula. No streak is detected. ]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="560"><br/>[ The Horse Head nebula. No streak is detected. ]</div> |
 
 
 ### System Requirement
