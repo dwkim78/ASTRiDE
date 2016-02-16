@@ -4,12 +4,17 @@
 <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/ASTRiDE.png">
 </div>
 
+
 <br/>
 This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
 
-Basic idea is same with the C version, which uses a border of each object (i.e. a contour of a certain level) in a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each border  is a streak or not. For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
+
+Basic idea is same with the C version, which uses a border of each object (i.e. a contour of a certain level) extracted from a fits image. Such kind of techniques extracting borders is called "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)". 
+
+
+The Python version has improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".
  
-The published paper title includes "High Velocity Objects", which means relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long. That is why the acronym, ASTRiDE, does not include "High Velocity Objects". 
+The title of the paper ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) includes "High Velocity Objects", which implies relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long. Thus, the acronym - ASTRiDE - does not include "High Velocity Objects". 
 
 
 ## Index
