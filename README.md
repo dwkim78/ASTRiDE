@@ -43,15 +43,15 @@ The title of the paper ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22.
 
 [Scikit-image 0.11.3+](http://scikit-image.org/)
  
- * To get contour map of a fits image.
+ * To get a contour map of a fits image.
 
 [Astropy 1.1.1+](http://www.astropy.org/)
 
- * For reading fits file and some utility functions.
+ * For reading a fits file.
 
 [Matplotlib 1.5.1+](http://matplotlib.org/)
 
- * For plotting figures of detected streaks.
+ * For plotting figures.
 
 [Phoutils 0.2.1+](http://photutils.readthedocs.org/en/latest/index.html)
 
