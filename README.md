@@ -95,7 +95,7 @@ The command will print messages like:
 2016-mm-dd hh:mm:ss,mmm INFO - Start.
 2016-mm-dd hh:mm:ss,mmm INFO - Read a fits file..
 2016-mm-dd hh:mm:ss,mmm INFO - Search streaks..
-2016-mm-dd hh:mm:ss,mmm INFO - Save figures and write outputs to ./long/
+2016-mm-dd hh:mm:ss,mmm INFO - Save figures and write outputs to ./OUTPUT_FOLDER/
 2016-mm-dd hh:mm:ss,mmm INFO - Done.
 ```
 
