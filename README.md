@@ -256,7 +256,7 @@ The streak instance - after calling "detect()" function - contains many informat
 | streak.streaks | The final list of streaks after excluding star-like sources and also after the linking (i.e. see Section [Detect Streaks](#detect-streaks)) |
 
 
-Among these, ```streak.streaks``` contains a list of detected streaks. Each element has all the information that "streaks.txt" has. It also contains additional information such as:
+Among these, ```streak.streaks``` contains a list of detected streaks. Each element has all the information that "streaks.txt" has (see [this section](#3-test)). It also contains additional information such as:
 
 | Variable | Description |
 |----:|:------------|
@@ -265,7 +265,7 @@ Among these, ```streak.streaks``` contains a list of detected streaks. Each elem
 | x_min and x_max | The minimum and maximum x coordinates of a streak |
 | y_min and y_max | The minimum and maximum y coordinates of a streak |
 
-Using the above information, you can make your own figures if needed.
+Using the above information, you can plot your own figures.
 
 
 ### 5. Test with Crowded Field Image
