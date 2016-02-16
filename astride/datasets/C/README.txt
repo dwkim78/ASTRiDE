@@ -1,7 +1,7 @@
 #----------------------------------------------------------#
-#   Instruction (in Korean) for the Originall C Pipeline   #
+#   Instruction (in Korean) for the Original C Pipeline   #
 # Note: I do not recommend to use this C pipeline. Please  #
-#       use recently programmed Python version, ASRTiDE.   #
+#       use recently programmed Python version, ASTRiDE.   #
 #----------------------------------------------------------#
 
  첨부한 파일에는 c source와 샘플 fits 파일이 들어있습니다.
