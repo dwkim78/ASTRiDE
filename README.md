@@ -227,7 +227,7 @@ The streak instance - after calling "detect()" function - contains many informat
 | streak.background_map | Derived background map |
 | streak.image | Background removed image |
 | streak.raw_borders | All the borders detected using a contour map |
-| streak.streaks | The final list of streaks |
+| streak.streaks | The final list of streaks after excluding star-like sources and also after the linking (i.e. see Section [Detect Streaks](#detect-streaks)) |
 
 
 Among these, ```streak.streaks``` contains a list of detected streaks. Each element has all the information that "streaks.txt" has. It also contains additional information such as:
