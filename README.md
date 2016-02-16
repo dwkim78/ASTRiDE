@@ -151,7 +151,7 @@ streak.write_outputs()
 streak.plot_figures()
 ```
 
-Detailed usages are given in the following sections.
+Detailed explanation for these commands are given in the following sections.
 
 
 ### Create Streak Instance
