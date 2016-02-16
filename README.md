@@ -151,12 +151,12 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | contour_threshold  | Threshold to extract a contour map. If this value is high, then only bright streaks will be detected. Default is 3. |
 | min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10. |
 | shape_cut  | Empirical cut for shape factor. Default is 0.2. |
-| area_cut | Empirical cut for area inside each contour |
-| radius_dev_cut  | Empirical cut for radius deviation. Default is 10. |
+| area_cut | Empirical cut for area inside each contour. Default is 10. |
+| radius_dev_cut  | Empirical cut for radius deviation. Default is 0.5. |
 | connectivity_angle | The maximum angle to link each streak. Default is 3. |
-| output_path  | Output path to save figures and outputs. Default is the 'None', which will create a folder of the input filename. |
+| output_path  | Output path to save figures and outputs. Default is "None", which will create a folder of the input filename. |
 
-Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are. Some of these options are explained in the following sections.
+Although you can customize pretty much everything of the Streak instance, I recommend to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
 
 ### Detect Streaks
 
