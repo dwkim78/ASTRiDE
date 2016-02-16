@@ -264,7 +264,7 @@ The following images shows some more applications. Images without any red dashed
 
 |  |  |
 |---|---|
-| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="560"><br/>[ The Horse Head nebula. No streak is detected. ]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="560"><br/>[ The Horse Head nebula. No streak is detected. ]</div> |
+| <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/dss2.png" width="560"><br/>[ [ESO DSS2](http://archive.eso.org/dss/dss) image. Three streaks are detected but only one looks a streak (i.e. ID=2)]</div> | <div align="center"> <img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/HorseHead.png" width="560"><br/>[ The Horsehead Nebula. No streak is detected. ]</div> |
 
 
 ### System Requirement
