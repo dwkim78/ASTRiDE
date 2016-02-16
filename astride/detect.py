@@ -5,7 +5,6 @@ import pylab as pl
 
 from skimage import measure
 from astropy.io import fits
-#from astropy.stats import sigma_clipped_stats
 from photutils.background import Background
 
 from astride.utils.edge import EDGE
@@ -73,8 +72,13 @@ class Streak:
         """
         Run the pipeline to detect streaks.
         """
+        # Remove background.
         self.__remove_background()
-        #self.__detect_sources()
+
+        # Detect sources. Test purpose only.
+        # self.__detect_sources()
+
+        # Detect streaks.
         self.__detect_streaks()
 
     def __remove_background(self):
@@ -104,6 +108,8 @@ class Streak:
         # Filter the edges, so only streak remains.
         edge.filter_edges()
         edge.connect_edges()
+
+        # Set streaks variable.
         self.streaks = edge.get_edges()
 
     def __detect_sources(self):
@@ -113,9 +119,7 @@ class Streak:
         detection_threshold = 3.
         sources = daofind(self.image,
                           threshold=self.__bkg.background_rms_median *
-                                    detection_threshold,
-                          fwhm=fwhm)
-        #sources = irafstarfind(data, threshold=std * detection_threshold, fwhm=FWHM)
+                          detection_threshold, fwhm=fwhm)
         pl.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
 
     def __find_box(self, n, edges, xs, ys):
@@ -143,7 +147,7 @@ class Streak:
 
     def plot_figures(self, cut_threshold=5.):
         """
-        Save figures of detected streaks under the 'path' folder.
+        Save figures of detected streaks.
         :param cut_threshold: Threshold to cut image values to make it
         more visible.
         """
@@ -152,8 +156,9 @@ class Streak:
 
         # Plot the image.
         plot_data = self.image.copy()
-        #mean, med, std = sigma_clipped_stats(self.image, sigma=3.0, iters=5)
-        # Background subtracted image, so the median value should be close to zero.
+
+        # Background subtracted image,
+        # so the median value should be close to zero.
         med = 0.
         std = self.__bkg.background_rms_median
         plot_data[np.where(self.image > med + cut_threshold * std)] = \
@@ -191,7 +196,7 @@ class Streak:
         pl.xlabel('X/pixel')
         pl.ylabel('Y/pixel')
         pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
-        pl.savefig('%sall.png' % (self.output_path))
+        pl.savefig('%sall.png' % self.output_path)
 
         # Plot all individual edges (connected).
         for n, edge in enumerate(edges):
@@ -217,18 +222,18 @@ class Streak:
 
     def write_outputs(self):
         """
-        Write information of detected streaks under the 'path' folder.
-        :param path:
+        Write information of detected streaks.
         """
 
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
-        fp = open('%sstreaks.txt' % (self.output_path), 'w')
+        fp = open('%sstreaks.txt' % self.output_path, 'w')
         fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
                       'radius_deviation slope_angle intercept connectivity\n')
         for n, edge in enumerate(self.streaks):
-            line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' % \
+            line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                   % \
                    (
                        edge['index'], edge['x_center'], edge['y_center'],
                        edge['area'], edge['perimeter'], edge['shape_factor'],
@@ -241,7 +246,6 @@ class Streak:
 if __name__ == '__main__':
     import time
 
-    #streak = Streak('/Users/kim/Dropbox/python/ASTRiDE/astride/datasets/samples/long.fits')
     streak = Streak('./datasets/samples/long.fits')
 
     start = time.time()
