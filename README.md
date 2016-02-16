@@ -148,8 +148,8 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | Options | Description |
 |----:|:------------|
 | bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. |
-| contour_threshold  | Threshold to extract a contour map. If this value is high, then only bright streaks will be detected. Default is 3. |
-| min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10. |
+| contour_threshold  | Threshold to extract a contour map. If this value is high, then only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
+| min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a streak of ~5 pixels length). Higher values, faster ASTRiDE runtime. |
 | shape_cut  | Empirical cut for shape factor. Default is 0.2. |
 | area_cut | Empirical cut for area inside each border. Default is 10. |
 | radius_dev_cut  | Empirical cut for radius deviation. Default is 0.5. |
@@ -283,7 +283,7 @@ In the case of the Horsehead Nebular image (right panel), it seems natural that 
 
 ### System Requirement
  
-Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies according to the size of fit images and the crowdedness of the images. In the cases of the two examples shown in the previous sections (i.e. less-crowded and crowded images), it took 0.6 sec and 2.6 sec to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD.
+Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies a lot according to the size of fit images and the crowdedness of the images. In the cases of the examples shown in the previous sections, it took from 0.6 seconds to 25 seconds to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD. If you want to increase the runtime of ASTRiDE, increase the values of ```contour_threshold``` and ```min_points``` when creating the Streak instance. For details, see [this section](#create-streak-instance).
 
 
 ### Note
