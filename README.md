@@ -1,5 +1,10 @@
 # ASTRiDE (Automated Streak Detection for Astronomical Images)
 
+<div align="center">
+<img src="https://github.com/dwkim78/ASTRiDE/blob/master/astride/datasets/images/ASTRiDE.png">
+</div>
+
+<br/>
 This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
 
 Basic idea is same with the C version, which uses a contour map of a fits image to detect streaks. Nevertheless, the Python version has improved algorithm for determining whether each edge (i.e. each contour) in the contour map is a streak or not For details, see the section "[How to Use ASTRiDE](#4-how-to-use-astride)".

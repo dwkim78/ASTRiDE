@@ -1,4 +1,4 @@
-ASTRiDE (Automated Streak Detection for High Velocity Objects)
+ASTRiDE (Automated Streak Detection for Astronomical Images)
 
 ASTRiDE detects streaks in a fits image using a contour map
 and morphological quantities. For details, visit
