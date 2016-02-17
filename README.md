@@ -9,7 +9,7 @@
 ASTRiDE aims to detect streaks in astronomical images using a border of each object (i.e. "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)") and their morphological parameters. Any kinds of fast moving objects such as [meteors](https://en.wikipedia.org/wiki/Meteoroid#Meteor), [satellites](https://en.wikipedia.org/wiki/Satellite), [near-Earth objects (NEOs)](https://en.wikipedia.org/wiki/Near-Earth_object), or even [cosmic rays](https://en.wikipedia.org/wiki/Cosmic_ray) could leave streak-like traces in the images. 
 
  
- The idea of ASTRiDE is originated from my previous work ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)). Nevertheless, ASTRiDE uses an updated algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE, thus, can detect not only long streaks but also relatively short or curved streaks that the original algorithm is less likely to detect.
+ The basic idea of ASTRiDE is from my previous work ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)), which also tried to detect streaks using a similar algorithm (i.e. boundary-tracing). Nevertheless, ASTRiDE uses an improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE can detect not only long streaks but also relatively short or curved streaks whereas the original algorithm is less likely to detect such short or curved streaks.
 
 
 ## Index
