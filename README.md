@@ -310,7 +310,7 @@ In the case of the Horsehead Nebular image (right panel), it seems natural that 
 
 ### System Requirement
  
-Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies a lot according to the size of fit images and the crowdedness of the images. In the cases of the examples shown in the previous sections, it took from 0.6 seconds to 25 seconds to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD. If you want to decrease ASTRiDE runtime, increase the values of ```contour_threshold``` and ```min_points``` when creating the Streak instance. For details, see [this section](#create-streak-instance).
+Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies a lot according to the size of fit images and the crowdedness of the images. In the cases of the examples shown in the previous sections, it took from 0.6 seconds to 25 seconds to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD. If you want to decrease ASTRiDE runtime, increase the values of ```contour_threshold``` and ```min_points``` when creating the Streak instance. For details, see [this section](#create-streak-instance). Changing those values, however, could result in non-detection of short or faint streaks.
 
 
 ### Note
