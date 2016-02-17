@@ -249,7 +249,7 @@ streak.plot_figures()
 
 ### Accessible Information Inside the Streak Instance
 
-The streak instance - after calling "detect()" function - contains many information such as:
+The Streak instance - after calling "detect()" function - contains many information such as:
 
 | Variable | Description |
 |----:|:------------|
