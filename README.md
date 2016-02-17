@@ -57,6 +57,10 @@ The title of the paper ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22.
 
  * For calculating background map of a fits image.
 
+
+These libraries will be automatically installed if your machine does not have them installed. In you encounter errors during the installation of these dependencies, try to install them individually. Your machine may not have other necessary libraries that are required by the dependencies.
+
+
 ## 2. Installation
 
 The easiest way to install the ASTRiDE package is:
