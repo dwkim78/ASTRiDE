@@ -353,7 +353,7 @@ This will send log messages to both console and a log file. Note that the path m
 ## ChangeLog
 
 ### v0.2
- - Beta version released. 
+ - beta version released. 
 
 ### v0.1
  - initiate the GitHub repository.
