@@ -37,7 +37,7 @@ class Streak:
         # Raw image.
         self.raw_image = raw_image
         # Background structure and background map
-        self.__bkg = None
+        self._bkg = None
         self.background_map = None
         # Background removed image.
         self.image = None
@@ -73,26 +73,26 @@ class Streak:
         Run the pipeline to detect streaks.
         """
         # Remove background.
-        self.__remove_background()
+        self._remove_background()
 
         # Detect sources. Test purpose only.
-        # self.__detect_sources()
+        # self._detect_sources()
 
         # Detect streaks.
-        self.__detect_streaks()
+        self._detect_streaks()
 
-    def __remove_background(self):
+    def _remove_background(self):
         # Get background map and subtract.
-        self.__bkg = Background(self.raw_image,
+        self._bkg = Background(self.raw_image,
                                 (self.bkg_box_size, self.bkg_box_size),
                                 method='median')
-        self.background_map = self.__bkg.background
+        self.background_map = self._bkg.background
         self.image = self.raw_image - self.background_map
 
-    def __detect_streaks(self):
+    def _detect_streaks(self):
         # Find contours.
         # Returned contours is the list of [row, columns] (i.e. [y, x])
-        bkg_rms = self.__bkg.background_rms_median
+        bkg_rms = self._bkg.background_rms_median
         contours = measure.find_contours(
             self.image, bkg_rms * self.contour_threshold, fully_connected='high'
                                          )
@@ -112,17 +112,17 @@ class Streak:
         # Set streaks variable.
         self.streaks = edge.get_edges()
 
-    def __detect_sources(self):
+    def _detect_sources(self):
         from photutils import daofind
 
         fwhm = 3.
         detection_threshold = 3.
         sources = daofind(self.image,
-                          threshold=self.__bkg.background_rms_median *
+                          threshold=self._bkg.background_rms_median *
                           detection_threshold, fwhm=fwhm)
         pl.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
 
-    def __find_box(self, n, edges, xs, ys):
+    def _find_box(self, n, edges, xs, ys):
         """
         Recursive function that defines a box surrounding
         one or more edges that are connected to each other.
@@ -140,7 +140,7 @@ class Streak:
 
         # If connected with other edge.
         if current_edge['connectivity'] != -1:
-            self.__find_box(current_edge['connectivity'], edges, xs, ys)
+            self._find_box(current_edge['connectivity'], edges, xs, ys)
         # Otherwise.
         else:
             return xs, ys
@@ -160,7 +160,7 @@ class Streak:
         # Background subtracted image,
         # so the median value should be close to zero.
         med = 0.
-        std = self.__bkg.background_rms_median
+        std = self._bkg.background_rms_median
         plot_data[np.where(self.image > med + cut_threshold * std)] = \
             med + cut_threshold * std
         plot_data[np.where(self.image < med - cut_threshold * std)] = \
@@ -183,7 +183,7 @@ class Streak:
                 # Define the box to plot.
                 xs = []
                 ys = []
-                self.__find_box(edge['index'], edges, xs, ys)
+                self._find_box(edge['index'], edges, xs, ys)
                 x_min = max(np.min(xs) - box_margin, 0)
                 x_max = min(np.max(xs) + box_margin, self.image.shape[0])
                 y_min = max(np.min(ys) - box_margin, 0)
@@ -208,7 +208,7 @@ class Streak:
                 # Define the box to plot.
                 xs = []
                 ys = []
-                self.__find_box(edge['index'], edges, xs, ys)
+                self._find_box(edge['index'], edges, xs, ys)
                 x_min = max(np.min(xs) - box_margin, 0)
                 x_max = min(np.max(xs) + box_margin, self.image.shape[0])
                 y_min = max(np.min(ys) - box_margin, 0)
