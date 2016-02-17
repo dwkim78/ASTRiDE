@@ -366,8 +366,9 @@ This will send log messages to both console and a log file. Note that the path m
 If you use this package for science publication, a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to the current [github repository](https://github.com/dwkim78/ASTRiDE) would be appreciated.
 
 ## Contact
+Dae-Won Kim, email: dwkim78 at gmail.com
 
-If you have questions, send an email to dwkim78 at gmail. My official webpage is [sites.google.com/site/dwkim78](https://sites.google.com/site/dwkim78/).
+Webpage: https://sites.google.com/site/dwkim78/
 
 
 #### Keywords
