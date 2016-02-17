@@ -6,10 +6,7 @@
 
 
 <br/>
-This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) originally programmed in C.
-
-
-Basic idea is same with the original C package, which uses a border of each object (i.e. a contour of a certain level) extracted from a fits image. Such kind of techniques extracting borders is called "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)". 
+This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) originally programmed in C. Basic idea is same with the original C package, which uses a border of each object (i.e. a contour of a certain level) extracted from a fits image. Such kind of techniques extracting borders is called "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)". 
 
 
 ASTRiDE uses an improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. Consequently, ASTRiDE can detect relatively short or curved streaks whereas the original C package is not very efficient to detect such streaks.
