@@ -6,13 +6,10 @@
 
 
 <br/>
-This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) originally programmed in C. Basic idea is same with the original C package, which uses a border of each object (i.e. a contour of a certain level) extracted from a fits image. Such kind of techniques extracting borders is called "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)". 
-
-
-ASTRiDE uses an improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. Consequently, ASTRiDE can detect relatively short or curved streaks whereas the original C package is not very efficient to detect such streaks.
+ASTRiDE aims to detect streaks in astronomical images using a border of each object (i.e. "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)") and their morphological parameters. Any kinds of fast moving objects such as [meteors](https://en.wikipedia.org/wiki/Meteoroid#Meteor), [satellites](https://en.wikipedia.org/wiki/Satellite), [near-Earth objects (NEOs)](https://en.wikipedia.org/wiki/Near-Earth_object), or even [cosmic rays](https://en.wikipedia.org/wiki/Cosmic_ray) could leave streak-like-traces in the images. 
 
  
-The title of the paper ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) includes "High Velocity Objects", which implies relatively long streaks. ASTRiDE, however, is able to detect any kind of streaks whose lengths are either short or long. Thus, the acronym - ASTRiDE - does not include "High Velocity Objects". 
+ The idea of ASTRiDE is originated from my previous work ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)). Nevertheless, ASTRiDE uses an updated algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE, thus, can detect not only long streaks but also relatively short or curved streaks that the original algorithm is less likely to detect.
 
 
 ## Index
