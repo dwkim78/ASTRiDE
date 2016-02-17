@@ -6,7 +6,7 @@
 
 
 <br/>
-This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and [https://sites.google.com/site/dwkim78/streak-detection](https://sites.google.com/site/dwkim78/streak-detection)) originally programmed in C.
+This package is the Python version of the streak detection pipeline ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)) originally programmed in C.
 
 
 Basic idea is same with the original C package, which uses a border of each object (i.e. a contour of a certain level) extracted from a fits image. Such kind of techniques extracting borders is called "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)". 
