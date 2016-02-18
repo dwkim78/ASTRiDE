@@ -206,13 +206,13 @@ That's it! The above one-line command will do everything needed to detect streak
   
   <br/>
   * Streak determination based on the morphologies of each  border
-    * As you can see from the above figure, there are many borders of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources by using the morphologies of each border such as:
+    * As you can see from the above figure, there are many borders of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources using morphological parameters derived from each border such as:
     
 | Morphology | Description |
 |----:|:------------|
 | Shape Factor | [Circularity](https://goo.gl/Z0Jy9z). The circularity of a circle is 1, and streak-like shape has much smaller circularity than 1. The default threshold is 0.2 (i.e. option "shape_cut") |
 | Radius Deviation | An approximated deviation from roundness. Since the center of each border can be calculated, ASTRiDE calculates distances to each data point from the center. A radius is defined as the median value of the distances. ASTRiDE then calculates "roundness_deviation" as std(distances - radius) / radius. "std()" is the standard deviation. For a circle, the value is 0. The default threshold is 0.5 (i.e. option "radius_dev_cut"). |
-| Area | The area inside an border must be larger than 10 pixels (i.e. option "area_cut"). |
+| Area | The area inside a border must be larger than 10 pixels (i.e. option "area_cut"). |
 
 The following figure shows the remaining two streak after these cut.
  
@@ -222,10 +222,10 @@ The following figure shows the remaining two streak after these cut.
   
   <br/><br/>
   * Link streaks by their slopes
-    * As shown in the above image, ASTRiDE finally detected two streaks. However, these two streaks are not really separated two streaks. They seem to be one streak, but separately detected since the middle part of the streak is disconnected. This can happen for any kind of fast moving objects (e.g. meteor, satellites, etc). ASTRiDE connects (i.e. link) such streaks by their slopes derived using the linear line fitting. If their slopes are within the "connectivity_angle", and also the slope between the two centers of the two streaks are within the "connectivity_angle" with each streak, ASTRiDE determines that the two streaks are connected. This is why the "all.png" shown in the [section "Test"](#3-test) has only one red dashed-line box surrounding the two streaks. If one streak (i.e. s1) is determined to be linked with another streak (i.e. s2), s1's "connectivity" value is the index of s2. If s2 is again linked with s3, then again s2's "connectivity" is the index of s3. If s3 is not linked with any other streaks, s3's "connectivity" is -1.
+    * As shown in the above image, ASTRiDE finally detected two streaks. However, these two streaks are not really separated two streaks. They seem to be one streak, but separately detected since the middle part of the streak is disconnected. ASTRiDE connects (i.e. link) such streaks by their slopes derived using the linear line fitting. If their slopes are within the "connectivity_angle", and also the slope between the two centers of the two streaks are within the "connectivity_angle" with each streak, ASTRiDE determines that the two streaks are connected. This is why the "all.png" shown in the [section "Test"](#3-test) has only one red dashed-line box surrounding the two streaks. If one streak (i.e. s1) is determined to be linked with another streak (i.e. s2), s1's "connectivity" value is the index of s2. If s2 is again linked with s3, then again s2's "connectivity" is the index of s3. If s3 is not linked with any other streaks, s3's "connectivity" is -1.
      
      
-Note that all the information derived during the streak detection procedures are accessible using the Streak instance 
+Note that all the information derived during the above procedures are accessible using the Streak instance 
 (See [this section](#accessible-information-inside-the-streak-instance)).
 
 ### Plot Figures and Write Outputs
@@ -241,7 +241,7 @@ streak.plot_figures()
 ```streak.write_outputs()``` will write an output text file, "streaks.txt", which is explained in the [section "Test"](#3-test).
 
 
-```streak.plot_figures()``` will generate figures including "all.png" (shown in [this section](#3-test)), and an individual figure for each linked streak. A Filename of each individual file is the first index among the indices of the linked streak such as "1.png" (shown below)
+```streak.plot_figures()``` will generate figures including "all.png" (shown in [this section](#3-test)), and an individual figure for each linked streak. A filename of each individual file is the first index among the indices of the linked streaks such as "1.png" (shown below)
 
 <div align="center">
 <img src="./astride/datasets/images/1.png"></div>
@@ -254,7 +254,7 @@ The Streak instance - after calling "detect()" function - contains many informat
 | Variable | Description |
 |----:|:------------|
 | streak.raw_image | Raw image before background removal |
-| streak.background_map | Derived background map |
+| streak.background_map | Background map |
 | streak.image | Background removed image |
 | streak.raw_borders | All borders detected using a contour map |
 | streak.streaks | The final list of streaks after excluding star-like sources and also after the linking (i.e. see Section [Detect Streaks](#detect-streaks)) |
@@ -274,18 +274,18 @@ Using the above information, you can plot your own figures.
 
 ### 5. Test with Crowded Field Image
 
-The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to other stars, which makes their borders long so that eventually look like a streak. In order to check how ASTRiDE works for such crowded field images, ASTRiDE is applied to a relatively crowded-field fits image. The following output images show the results.
+The example shown above used a less-crowded field image. If there are many stars in the field (i.e. crowded field), it is possible that some stars' borders are attached to each other, which makes their borders long so that eventually look like a streak. In order to check how ASTRiDE works for such crowded field images, ASTRiDE is applied to a relatively crowded-field fits image. The following output images show the results.
  
  <div align="center">
 <img src="./astride/datasets/images/crowded_field.png"><br/>
 [ Streak detection test using the crowded field image ]</div>
 
-All the three images shown above are automatically generated by ASTRiDE. As you can see, ASTRiDE successfully excluded all the stars and detected two very short streaks (i.e. two bottom panels) that are quite hard to be detected even by eyes.
+These three images shown above are automatically generated by ASTRiDE. As you can see, ASTRiDE successfully excluded all the stars and detected two very short streaks (i.e. two bottom panels) that are quite hard to be detected even by eyes.
 
 
 ### 6. Application to Astronomical Images
 
-The following images show the application results of ASTRiDE. 
+The following images show the application of ASTRiDE. 
 
 | [ESO DSS2](http://archive.eso.org/dss/dss) image | The Horsehead Nebular |
 |---|---|
@@ -308,7 +308,7 @@ In the case of the Horsehead Nebular image (right panel), it seems natural that 
 
 ### System Requirement
  
-Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies a lot according to the size of fit images and the crowdedness of the images. In the cases of the examples shown in the previous sections, it took from 0.6 seconds to 25 seconds to detect streaks using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD. If you want to decrease ASTRiDE runtime, increase the values of ```contour_threshold``` and ```min_points``` when creating the Streak instance. For details, see [this section](#create-streak-instance). Changing those values, however, could result in non-detection of short or faint streaks.
+Any decent or even relatively old machines can run ASTRiDE as long as the machines are capable of running general Python libraries. Runtime for streak detection (i.e. wall-clock time) varies according to the size of fit images and the crowdedness of the images. In the cases of the examples shown in the previous sections, it took from 0.6 seconds to 25 seconds using Macbook Pro 13'' equipped with 2.7 GHz Intel Core i5, 8 GB memory, and 256 GB SSD. If you want to decrease ASTRiDE runtime, increase the values of ```contour_threshold``` and ```min_points``` when creating the Streak instance. For details, see [this section](#create-streak-instance). Changing those values, however, could result in non-detection of short or faint streaks.
 
 
 ### Note
