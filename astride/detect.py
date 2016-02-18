@@ -60,7 +60,8 @@ class Streak:
 
         # Set output path.
         if output_path is None:
-            output_path = './%s/' % (os.path.basename(filename).split('.')[0])
+            output_path = './%s/' % \
+                          ('.'.join(os.path.basename(filename).split('.')[:-1]))
         if output_path[-1] != '/':
             output_path += '/'
         self.output_path = output_path

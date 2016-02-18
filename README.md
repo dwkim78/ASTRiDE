@@ -6,7 +6,7 @@
 
 
 <br/>
-ASTRiDE aims to detect streaks in astronomical images using a border of each object (i.e. "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)") and their morphological parameters. Any kinds of fast moving objects such as [meteors](https://en.wikipedia.org/wiki/Meteoroid#Meteor), [satellites](https://en.wikipedia.org/wiki/Satellite), [near-Earth objects (NEOs)](https://en.wikipedia.org/wiki/Near-Earth_object), or even [cosmic rays](https://en.wikipedia.org/wiki/Cosmic_ray) could leave streak-like traces in the images. 
+ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of each object (i.e. "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)") and their morphological parameters. Any kinds of fast moving objects such as [meteors](https://en.wikipedia.org/wiki/Meteoroid#Meteor), [satellites](https://en.wikipedia.org/wiki/Satellite), [near-Earth objects (NEOs)](https://en.wikipedia.org/wiki/Near-Earth_object), or even [cosmic rays](https://en.wikipedia.org/wiki/Cosmic_ray) could leave streak-like traces in the images. 
 
  
  The basic idea of ASTRiDE is from my previous work ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)), which also tried to detect streaks using a similar algorithm (i.e. boundary-tracing). Nevertheless, ASTRiDE uses an improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE can detect not only long streaks but also relatively short or curved streaks whereas the original algorithm is less likely to detect such short or curved streaks.
@@ -52,7 +52,7 @@ ASTRiDE aims to detect streaks in astronomical images using a border of each obj
  * For calculating background map of a fits image.
 
 
-These libraries will be automatically installed if your machine does not have them installed. In you encounter errors during the installation of these dependencies, try to install them individually. Your machine may not have other necessary libraries that are required by the dependencies.
+These libraries will be automatically installed if your machine does not have them installed. If you encounter errors during the installation of these dependencies, try to install them individually. Your machine may not have other required libraries by these dependencies.
 
 
 ## 2. Installation
@@ -103,11 +103,11 @@ yyyy-mm-dd hh:mm:ss,mmm INFO - Save figures and write outputs to ./long/
 yyyy-mm-dd hh:mm:ss,mmm INFO - Done.
 ```
 
-The test module will also save figures and write information of detected streaks under the "./long/" folder. In the folder, you can find two images and one text file. The two images are:
+The test module will save figures and information of detected streaks under the "./long/" folder. In the folder, you can find two images and one text file. The two images are:
 
 | Image name | Description |
 |----:|:------------|
-| all.png |  A full image with detected streaks (shown below) |
+| all.png |  The full image with detected streaks (shown below) |
 | 1.png | A zoomed image for each linked streak |
 
 <div align="center">
@@ -122,7 +122,7 @@ The output text file named as "streaks.txt" contains following information.
 | ID  | Index |
 | x_center, y_center  | Coordinate of the center  |
 | area  | Area inside a streak  |
-| perimeter  | Length of the perimeter of a streak  |
+| perimeter  | Perimeter of a streak  |
 | shape_factor  | 4 * PI * area / perimeter^2 |
 | radius_deviation  | Parameter to check roundness  |
 | slope  | Slope of a linear line fitted to a streak  |
@@ -145,7 +145,7 @@ The following pseudo-code shows how to use ASTRiDE.
 from astride import Streak
 
 # Read a fits image and create a Streak instance.
-streak = Streak('YOUR_FITS_FILE_NAME.fits')
+streak = Streak('YOUR_FITS_FILENAME.fits')
 
 # Detect streaks.
 streak.detect()
@@ -173,12 +173,12 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | Options | Description |
 |----:|:------------|
 | bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. |
-| contour_threshold  | Threshold to extract a contour map. If this value is high, then only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
-| min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a streak of ~5 pixels length). Higher values, faster ASTRiDE runtime. |
+| contour_threshold  | Threshold to extract a contour map. If this value is high, only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
+| min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a length of ~5 pixels if the border is a streak-like object). Higher values, faster ASTRiDE runtime. |
 | shape_cut  | Empirical cut for shape factor. Default is 0.2. |
 | area_cut | Empirical cut for area inside each border. Default is 10. |
 | radius_dev_cut  | Empirical cut for radius deviation. Default is 0.5. |
-| connectivity_angle | The maximum angle to link each streak. Default is 3. |
+| connectivity_angle | The maximum angle of slope to link each streak. Default is 3 degree. |
 | output_path  | Output path to save figures and outputs. Default is "None", which will create a folder of the input filename. |
 
 Although you can customize pretty much everything of the Streak instance, it is recommended to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
@@ -349,11 +349,14 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## ChangeLog
 
+### v0.2.1
+- bug fixed and source code cleaned
+
 ### v0.2
- - beta version released. 
+- beta version released 
 
 ### v0.1
- - initiate the GitHub repository.
+- initiate the GitHub repository
 
 ## Citation
 
