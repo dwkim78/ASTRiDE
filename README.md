@@ -160,7 +160,7 @@ Detailed explanation for these commands are given in the following sections.
 
 ### Create Streak Instance
 
-You first need to import the ASTRiDE library and create a Streak instance as:
+We first need to import the ASTRiDE library and create a Streak instance as:
 
 ```python
 from astride import Streak
@@ -185,7 +185,7 @@ Although you can customize pretty much everything of the Streak instance, it is 
 
 ### Detect Streaks
 
-Now you can detect streaks in the fits image as:
+Now we can detect streaks in the fits image as:
 
 ```python
 
@@ -206,7 +206,7 @@ That's it! The above one-line command will do everything needed to detect streak
   
   <br/>
   * Streak determination based on the morphologies of each  border
-    * As you can see from the above figure, there are many borders of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources using morphological parameters derived from each border such as:
+    * As we can see from the above figure, there are many borders of star-like sources that are definitely <b>not</b> streaks. ASTRiDE removes such star-like sources using morphological parameters derived from each border such as:
     
 | Morphology | Description |
 |----:|:------------|
@@ -300,7 +300,7 @@ In the case of the ESO DSS2 image (left panel), ASTRiDE detected three streaks. 
 |2   | 640.3|   360.9   | 0.06         |  0.60            |
 |3   | 21.6 |   38.8    | 0.18         |  0.52            |
   
-As you can clearly see, the streak with ID=2 is longer than two others, and also has a smaller shape factor than others. All these variables are accessible using the Streak instance, so you can define your own criteria according to the shapes of streaks that you want to detect. You can also set threshold cut for some of these parameters when creating the Streak instance. For details, see [this section](#create-streak-instance).
+As we can clearly see, the streak with ID=2 is longer than two others, and also has a smaller shape factor than others. All these variables are accessible using the Streak instance, so you can define your own criteria according to the shapes of streaks that you want to detect. You can also set threshold cut for some of these parameters when creating the Streak instance. For details, see [this section](#create-streak-instance).
 
 
 In the case of the Horsehead Nebular image (right panel), it seems natural that ASTRiDE does not detect any streaks in the image.
