@@ -300,7 +300,10 @@ In the case of the ESO DSS2 image (left panel), ASTRiDE detected three streaks. 
 |2   | 640.3|   360.9   | 0.06         |  0.60            |
 |3   | 21.6 |   38.8    | 0.18         |  0.52            |
   
-As we can clearly see, the streak with ID=2 is longer than two others, and also has a smaller shape factor than others. All these variables are accessible using the Streak instance, so you can define your own criteria according to the shapes of streaks that you want to detect. You can also set threshold cut for some of these parameters when creating the Streak instance. For details, see [this section](#create-streak-instance).
+As we can clearly see, the streak with ID=2 is longer than two others, and also has a smaller shape factor than others. All these variables are accessible using the Streak instance, so you can define your own criteria according to the shapes of streaks that you want to detect. For instance, if you are interested in relatively long streaks, you can use the values of "Perimeter". 
+
+
+You can also set threshold cut for some of these parameters when creating the Streak instance. For details, see [this section](#create-streak-instance). For example, if you change the value of "shape_cut" to 0.3, ASTRiDE will also detect relatively <b>thicker</b> streaks. However, at the same time, it is also possible that ASTRiDE would return star-like objects.
 
 
 In the case of the Horsehead Nebular image (right panel), it seems natural that ASTRiDE does not detect any streaks in the image.
