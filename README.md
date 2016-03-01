@@ -315,7 +315,7 @@ The following example using the image of [M35 (NGC 2168)](http://astro.uchicago.
 |---|---|
 | <div align="center"> <img src="./astride/datasets/images/mgm035.default.png" width="500"></div> | <div align="center"> <img src="./astride/datasets/images/mgm035.tuned.png" width="500"></div> |
 
-In the image, you can see the diffraction spike of the brightest stars, which is a sort of streaks. Left panel shows the result using the default ASTRiDE parameter setting, and it did not detect any streak. In the right panel, the two parameters are tuned (i.e. ```shape_cut = 0.3``` and ```radius_dev_cut = 0.4```), and ASTRiDE detects the spike. As you can clearly see, the spike shares its border with other stars, and thus it is not actually look like a streak anymore. That is the reason why it is not detected with the default setting. Nevertheless, as this example shows, you can decide your own criteria based on your needs.
+In the image, you can see the diffraction spike of the brightest stars, which is a sort of streaks. Left panel shows the result using the default ASTRiDE parameter setting, and it did not detect any streak. In the right panel, the two parameters were tuned (i.e. ```shape_cut = 0.3``` and ```radius_dev_cut = 0.4```), and ASTRiDE detected the spike. As you can clearly see, the spike shares its border with other stars, and thus it is not actually look like a streak anymore. That is the reason why it was not detected with the default setting. Nevertheless, as this example shows, you can decide your own criteria based on your needs.
 
 
 ### System Requirement
