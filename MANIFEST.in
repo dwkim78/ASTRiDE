@@ -1,3 +1,5 @@
 include astride/datasets/C/streak.tgz
 include astride/datasets/C/README.txt
 include astride/datasets/samples/long.fits
+
+exclude astride/datasets/images/*.png

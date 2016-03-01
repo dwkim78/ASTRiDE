@@ -361,6 +361,9 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## ChangeLog
 
+### v0.2.11
+- remove unnecessary image files for PyPi distribution
+
 ### v0.2.1
 - bug fixed and source code cleaned
 
