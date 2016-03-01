@@ -168,12 +168,13 @@ class Streak:
             med - cut_threshold * std
         pl.imshow(plot_data, origin='lower', cmap='gray')
 
-        ## Plot all raw borders. Test purpose only.
+        # Plot all raw borders. Test purpose only.
         #edges = self.raw_borders
         #for n, edge in enumerate(edges):
         #    pl.plot(edge['x'], edge['y'])
-        #    #pl.text(edge['x'][0], edge['y'][1],
-        #    #        '%d' % (edge['index']), color='b', fontsize=15)
+        #    pl.text(edge['x'][0], edge['y'][1],
+        #            '%.2f' % (edge['shape_factor']), color='b', fontsize=10)
+        #pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
         #pl.savefig('%sall.png' % self.output_path)
         #return 0
 
@@ -257,12 +258,12 @@ if __name__ == '__main__':
     import time
 
     streak = Streak('./datasets/samples/long.fits')
+    #streak = Streak('/Users/kim/Dropbox/iPythonNotebook/ASTRiDE/mgm035.fts',
+    #                shape_cut=0.3, radius_dev_cut=0.4)
 
     start = time.time()
     streak.detect()
     end = time.time()
-
-    print streak.streaks
 
     streak.plot_figures()
     streak.write_outputs()
