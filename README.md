@@ -361,6 +361,9 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## ChangeLog
 
+### v?.?.?
+- real-time training of an outlier model to detect streaks?
+
 ### v0.2.11
 - remove unnecessary image files for PyPi distribution
 
