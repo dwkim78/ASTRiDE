@@ -17,7 +17,7 @@ class Logger():
         """
 
         # create logger.
-        logger = logging.getLogger('UPSILoN')
+        logger = logging.getLogger('ASTRiDE')
         logger.setLevel(logging.DEBUG)
 
         # create formatter and add it to the handlers
