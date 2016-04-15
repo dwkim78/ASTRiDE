@@ -6,7 +6,10 @@ from sklearn.cluster import Birch, KMeans, AgglomerativeClustering
 class Outlier:
     def __init__(self, edges, branching_factor=50, threshold=0.1):
         """
-        Detect outliers using Machine Learning Algorithm. This module will train a model in real-time, so it might be CPU-intensive and time-consuming. Still testing and under development.
+        Detect outliers using Machine Learning Algorithm.
+
+        This module will train a model in real-time, so it might be
+        CPU-intensive and time-consuming. Still testing and under development.
 
         :param edges: An list of an edge instance.
         """

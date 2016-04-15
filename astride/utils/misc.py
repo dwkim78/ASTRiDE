@@ -3,6 +3,7 @@ import numpy as np
 
 def moving_average(data, window_size=5):
     """
+    Moving average.
 
     :param data: An array of values.
     :param window_size: Moving average window size.

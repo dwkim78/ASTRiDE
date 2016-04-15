@@ -20,13 +20,16 @@ class Streak:
 
         :param filename: Fits filename.
         :param bkg_box_size: Box size for background estimation.
-        :param contour_threshold: Threshold to search contours (i.e. edges of an input image)
+        :param contour_threshold: Threshold to search contours (i.e. edges of
+        an input image)
         :param min_points: The number of minimum data points in each edge.
         :param shape_cut: An empirical shape factor cut.
         :param area_cut: An empirical area cut.
         :param radius_dev_cut: An empirical radius deviation cut.
-        :param connectivity_angle: An maximum angle to connect each separated edge.
-        :param output_path: Path to save figures and output files. If None, the base filename is used as the folder name.
+        :param connectivity_angle: An maximum angle to connect each separated
+        edge.
+        :param output_path: Path to save figures and output files. If None,
+        the base filename is used as the folder name.
         """
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
@@ -68,9 +71,7 @@ class Streak:
         pl.rcParams['figure.figsize'] = [12, 9]
 
     def detect(self):
-        """
-        Run the pipeline to detect streaks.
-        """
+        """Run the pipeline to detect streaks."""
         # Remove background.
         self._remove_background()
 
@@ -123,7 +124,8 @@ class Streak:
 
     def _find_box(self, n, edges, xs, ys):
         """
-        Recursive function that defines a box surrounding one or more edges that are connected to each other.
+        Recursive function that defines a box surrounding one or more
+        edges that are connected to each other.
 
         :param n: Index of edge currently checking.
         :param edges: edges.
@@ -148,7 +150,8 @@ class Streak:
         """
         Save figures of detected streaks.
 
-        :param cut_threshold: Threshold to cut image values to make it more visible.
+        :param cut_threshold: Threshold to cut image values to make it
+        more visible.
         """
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
@@ -230,9 +233,7 @@ class Streak:
         pl.clf()
 
     def write_outputs(self):
-        """
-        Write information of detected streaks.
-        """
+        """Write information of detected streaks."""
 
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)

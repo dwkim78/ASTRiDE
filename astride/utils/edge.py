@@ -7,14 +7,16 @@ class EDGE:
     def __init__(self, contours, min_points=10, shape_cut=0.2,
                  area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.):
         """
-        Find, characterize, and quantify the shape of edges (i.e. borders) using input contours.
+        Find, characterize, and quantify the shape of edges (i.e. borders)
+        using input contours.
 
         :param contours: An array containing contour list.
         :param min_points: The number of minimum data points in each edge.
         :param shape_cut: An empirical shape factor cut.
         :param area_cut: An empirical area cut.
         :param radius_dev_cut: An empirical radius deviation cut.
-        :param connectivity_angle: An maximum angle to connect each separated edge.
+        :param connectivity_angle: An maximum angle to connect each separated
+        edge.
         """
         # Set global values.
         self.shape_cut = shape_cut
@@ -57,9 +59,7 @@ class EDGE:
                 'box_plotted': False})
 
     def quantify(self):
-        """
-        Quantify shape of the contours.
-        """
+        """Quantify shape of the contours."""
         four_pi = 4. * np.pi
         for edge in self.edges:
             # Positions
@@ -119,9 +119,7 @@ class EDGE:
         return self.edges
 
     def filter_edges(self):
-        """
-        Remove edges unlikely to be streaks.
-        """
+        """Remove edges unlikely to be streaks."""
         filtered_edges = []
         filtered_cnt = 1
         for edge in self.edges:
@@ -151,9 +149,7 @@ class EDGE:
         return residu
 
     def connect_edges(self):
-        """
-        Connect detected edges based on their slopes.
-        """
+        """Connect detected edges based on their slopes."""
         # Fitting a straight line to each edge.
         p0 = [0., 0.]
         radian2angle = 180. / np.pi
