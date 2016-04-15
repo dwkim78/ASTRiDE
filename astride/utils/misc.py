@@ -5,9 +5,17 @@ def moving_average(data, window_size=5):
     """
     Moving average.
 
-    :param data: An array of values.
-    :param window_size: Moving average window size.
-    :return: Moving averaged array.
+    Parameters
+    ----------
+    data : (N,) array_like
+        An array of values.
+    window_size : int
+        Moving average window size.
+
+    Returns
+    -------
+    out : (N,) array_like
+        Moving averaged array.
     """
     window = np.ones(int(window_size))/float(window_size)
     results = np.convolve(data, window, 'valid')

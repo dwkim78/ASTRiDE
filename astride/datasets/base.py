@@ -14,8 +14,15 @@ def read_fits(filename='long.fits'):
     """
     Read an sample fits file and return only image part.
 
-    :param filename: Fits filename.
-    :return: Image data.
+    Parameters
+    ----------
+    filename : str
+        Fits filename.
+
+    Returns
+    -------
+    out : numpy.ndarray
+        Fits image data.
     """
 
     module_path = dirname(__file__)

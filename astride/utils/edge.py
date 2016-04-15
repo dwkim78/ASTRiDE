@@ -4,20 +4,26 @@ from scipy.optimize import leastsq
 
 
 class EDGE:
+    """
+    Detect edges (i.e. borders) using the input contours.
+
+    Parameters
+    ----------
+    contours : (N,) array_like
+        An array containing contour list.
+    min_points : int
+        The number of minimum data points in each edge.
+    shape_cut : float
+        An empirical shape factor cut.
+    area_cut : float
+        An empirical area cut.
+    radius_dev_cut : float
+        An empirical radius deviation cut.
+    connectivity_angle: float
+        An maximum angle to connect each separated edge.
+    """
     def __init__(self, contours, min_points=10, shape_cut=0.2,
                  area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.):
-        """
-        Find, characterize, and quantify the shape of edges (i.e. borders)
-        using input contours.
-
-        :param contours: An array containing contour list.
-        :param min_points: The number of minimum data points in each edge.
-        :param shape_cut: An empirical shape factor cut.
-        :param area_cut: An empirical area cut.
-        :param radius_dev_cut: An empirical radius deviation cut.
-        :param connectivity_angle: An maximum angle to connect each separated
-        edge.
-        """
         # Set global values.
         self.shape_cut = shape_cut
         self.area_cut = area_cut
@@ -92,9 +98,17 @@ class EDGE:
         """
         Return values related to the shape based on x and y.
 
-        :param x: An array of x coordinates.
-        :param y: An array of y coordinates.
-        :return: Area, perimeter, x_center, y_center, distances from the center.
+        Parameters
+        ----------
+        x : (N,) array_like
+            An array of x coordinates.
+        y : (N,) array_like
+            An array of y coordinates.
+
+        Returns
+        -------
+        out: (5,) float
+            Area, perimeter, x_center, y_center, distances from the center.
         """
 
         # Area.
@@ -138,10 +152,19 @@ class EDGE:
         """
         Residual for a straight line.
 
-        :param theta: Coefficients.
-        :param x: An array of x values.
-        :param y: An array of y values.
-        :return: residuals.
+        Parameters
+        ----------
+        theta : (2,) float
+            Coefficients.
+        x : (N,) array_like
+            An array of x values.
+        y : (N,) array_like
+            An array of y values.
+
+        Returns
+        -------
+        out : float
+            Residuals.
         """
 
         residu = y - (theta[0] * x + theta[1])

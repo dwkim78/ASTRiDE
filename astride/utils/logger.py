@@ -6,16 +6,14 @@ import logging
 class Logger():
     """
     Create logger instance for writing to both console and a local file.
+
+    Parameters
+    ----------
+    filepath : str
+        Specify a log filename with the absolute path.
+        If not given, no output is written to a file.
     """
     def __init__(self, filepath=None):
-        """
-        Initialize. Write logger to either console and/or to a disk.
-
-        :param filepath: specify a log filename with the absolute path.
-        If not given, no output is written to a file.
-        :return:
-        """
-
         # create logger.
         logger = logging.getLogger('ASTRiDE')
         logger.setLevel(logging.DEBUG)
@@ -42,7 +40,7 @@ class Logger():
         self.logger = logger
 
     def getLogger(self):
-        """Return log instance."""
+        """Return a logger instance."""
 
         return self.logger
 

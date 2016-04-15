@@ -11,26 +11,35 @@ from astride.utils.edge import EDGE
 
 
 class Streak:
+    """
+    Detect streaks using several morphological values.
+
+    Parameters
+    ----------
+    filename : str
+        Fits filename.
+    bkg_box_size : int
+        Box size for background estimation.
+    contour_threshold : float
+        Threshold to search contours (i.e. edges of an input image)
+    min_points: int
+        The number of minimum data points in each edge.
+    shape_cut : float
+        An empirical shape factor cut.
+    area_cut : float
+        An empirical area cut.
+    radius_dev_cut : float
+        An empirical radius deviation cut.
+    connectivity_angle: float
+        An maximum angle to connect each separated edge.
+    output_path: str
+        Path to save figures and output files. If None, the base filename
+        is used as the folder name.
+    """
     def __init__(self, filename, bkg_box_size=50, contour_threshold=3.,
                  min_points=10, shape_cut=0.2, area_cut=10.,
                  radius_dev_cut=0.5, connectivity_angle=3.,
                  output_path=None):
-        """
-        Initialize the streak instance.
-
-        :param filename: Fits filename.
-        :param bkg_box_size: Box size for background estimation.
-        :param contour_threshold: Threshold to search contours (i.e. edges of
-        an input image)
-        :param min_points: The number of minimum data points in each edge.
-        :param shape_cut: An empirical shape factor cut.
-        :param area_cut: An empirical area cut.
-        :param radius_dev_cut: An empirical radius deviation cut.
-        :param connectivity_angle: An maximum angle to connect each separated
-        edge.
-        :param output_path: Path to save figures and output files. If None,
-        the base filename is used as the folder name.
-        """
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
         hdulist.close()
@@ -124,14 +133,26 @@ class Streak:
 
     def _find_box(self, n, edges, xs, ys):
         """
+        Connect edges by their "connectivity" values.
+
         Recursive function that defines a box surrounding one or more
         edges that are connected to each other.
 
-        :param n: Index of edge currently checking.
-        :param edges: edges.
-        :param xs: x min and max coordinates.
-        :param ys: y min and max coordinates.
-        :return: x and y coordinates for plot plotting.
+        Parameters
+        ----------
+        n : int
+            Index of edge currently checking.
+        edges: (N,) array_like
+            An array containing information of all edges.
+        xs : (M, 2) float
+            X min and max coordinates.
+        ys : (M, 2) float
+            Y min and max coordinates.
+
+        Returns
+        -------
+        out: (K, 2) float
+            X and y min/max coordinates for plot plotting.
         """
         # Add current coordinates.
         current_edge = [edge for edge in edges if edge['index'] == n][0]
@@ -150,8 +171,10 @@ class Streak:
         """
         Save figures of detected streaks.
 
-        :param cut_threshold: Threshold to cut image values to make it
-        more visible.
+        Parameters
+        ----------
+        cut_threshold: float
+            Threshold to cut image values to make it more visible.
         """
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
