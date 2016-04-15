@@ -363,6 +363,8 @@ This will send log messages to both console and a log file. Note that the path m
 
 ### v?.?.?
 - real-time training of an outlier model to detect streaks?
+    - Tested with several different clustering algorithms (e.g. Birch, KMeans, AgglomerativeClustering, etc.), and it works well for clear outliers but not for nearby outliers (strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily, but for short and rather thick streaks, it fails to detect while the current method using morphological parameters detects both kinds.
+    - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
 
 ### v0.2.11
 - remove unnecessary image files for PyPi distribution
