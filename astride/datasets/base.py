@@ -21,7 +21,7 @@ def read_fits(filename='long.fits'):
 
     Returns
     -------
-    out : numpy.ndarray
+    data : numpy.ndarray
         Fits image data.
     """
 

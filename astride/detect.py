@@ -18,21 +18,21 @@ class Streak:
     ----------
     filename : str
         Fits filename.
-    bkg_box_size : int
+    bkg_box_size : int, optional
         Box size for background estimation.
-    contour_threshold : float
+    contour_threshold : float, optional
         Threshold to search contours (i.e. edges of an input image)
-    min_points: int
+    min_points: int, optional
         The number of minimum data points in each edge.
-    shape_cut : float
+    shape_cut : float, optional
         An empirical shape factor cut.
-    area_cut : float
+    area_cut : float, optional
         An empirical area cut.
-    radius_dev_cut : float
+    radius_dev_cut : float, optional
         An empirical radius deviation cut.
-    connectivity_angle: float
+    connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
-    output_path: str
+    output_path: str, optional
         Path to save figures and output files. If None, the base filename
         is used as the folder name.
     """
@@ -142,17 +142,19 @@ class Streak:
         ----------
         n : int
             Index of edge currently checking.
-        edges: (N,) array_like
+        edges: array_like
             An array containing information of all edges.
-        xs : (M, 2) float
-            X min and max coordinates.
-        ys : (M, 2) float
-            Y min and max coordinates.
+        xs : array_like
+            X min and max coordinates. (N,2) matrix.
+        ys : array_like
+            Y min and max coordinates. (N,2) matrix.
 
         Returns
         -------
-        out: (K, 2) float
-            X and y min/max coordinates for plot plotting.
+        x_mins : array_like
+            X min and max coordinates.
+        y_mins : array_like
+            Y min and max coordinates.
         """
         # Add current coordinates.
         current_edge = [edge for edge in edges if edge['index'] == n][0]
@@ -173,7 +175,7 @@ class Streak:
 
         Parameters
         ----------
-        cut_threshold: float
+        cut_threshold: float, optional
             Threshold to cut image values to make it more visible.
         """
         if not os.path.exists(self.output_path):

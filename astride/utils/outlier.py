@@ -12,7 +12,7 @@ class Outlier:
 
     Parameters
     ----------
-    edges: (N,) array_like
+    edges: array_like
         A list of an edge instance.
     """
     def __init__(self, edges, branching_factor=50, threshold=0.1):

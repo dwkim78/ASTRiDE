@@ -7,14 +7,14 @@ def moving_average(data, window_size=5):
 
     Parameters
     ----------
-    data : (N,) array_like
+    data : array_like
         An array of values.
-    window_size : int
+    window_size : int, optional
         Moving average window size.
 
     Returns
     -------
-    out : (N,) array_like
+    result : array_like
         Moving averaged array.
     """
     window = np.ones(int(window_size))/float(window_size)

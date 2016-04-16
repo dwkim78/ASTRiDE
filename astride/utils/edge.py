@@ -9,17 +9,17 @@ class EDGE:
 
     Parameters
     ----------
-    contours : (N,) array_like
+    contours : array_like
         An array containing contour list.
-    min_points : int
+    min_points : int, optional
         The number of minimum data points in each edge.
-    shape_cut : float
+    shape_cut : float, optional
         An empirical shape factor cut.
-    area_cut : float
+    area_cut : float, optional
         An empirical area cut.
-    radius_dev_cut : float
+    radius_dev_cut : float, optional
         An empirical radius deviation cut.
-    connectivity_angle: float
+    connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
     """
     def __init__(self, contours, min_points=10, shape_cut=0.2,
@@ -100,15 +100,23 @@ class EDGE:
 
         Parameters
         ----------
-        x : (N,) array_like
+        x : array_like
             An array of x coordinates.
-        y : (N,) array_like
+        y : array_like
             An array of y coordinates.
 
         Returns
         -------
-        out: (5,) float
-            Area, perimeter, x_center, y_center, distances from the center.
+        area : float
+            Area of the border.
+        perimeter : float
+            Perimeter of the border.
+        x_center : float
+            X center coordinate.
+        y_center : float
+            Y center coordinate.
+        distances : numpy.ndarray
+            Distances from the center to each border element.
         """
 
         # Area.
@@ -154,16 +162,16 @@ class EDGE:
 
         Parameters
         ----------
-        theta : (2,) float
-            Coefficients.
-        x : (N,) array_like
+        theta : list of float
+            Coefficients of float[2].
+        x : array_like
             An array of x values.
-        y : (N,) array_like
+        y : array_like
             An array of y values.
 
         Returns
         -------
-        out : float
+        residual : float
             Residuals.
         """
 

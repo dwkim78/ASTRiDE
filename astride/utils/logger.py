@@ -9,7 +9,7 @@ class Logger():
 
     Parameters
     ----------
-    filepath : str
+    filepath : str, optional
         Specify a log filename with the absolute path.
         If not given, no output is written to a file.
     """
