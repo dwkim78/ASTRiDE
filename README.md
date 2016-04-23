@@ -172,7 +172,7 @@ You can replace "long.fits" with your own fits filename. There are many options 
 
 | Options | Description |
 |----:|:------------|
-| remove_bkg | Choose a method to remove background of a fits image. Either 'constant' or 'map'. 'constant' calculates background statistics using the astropy sigma-clipped routine. 'map' derives a background map. 'map' is slow but relatively more accurate if the background is varying through the image field. Default is 'constant'. |
+| remove_bkg | Choose a method to remove background of a fits image. Either 'constant' or 'map'. 'constant' calculates background statistics using the astropy sigma-clipped routine. 'map' derives a background map. 'map' is slow but relatively more accurate if the background is varying across the image field. Default is 'constant'. |
 | bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. Only used when ```remove_bkg``` = 'map'. |
 | contour_threshold  | Threshold to extract a contour map. If this value is high, only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
 | min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a length of ~5 pixels if the border is a streak-like object). Higher values, faster ASTRiDE runtime. |
@@ -196,7 +196,7 @@ streak.detect()
 That's it! The above one-line command will do everything needed to detect streaks, which is:
 
   * Background removal
-    * ASTRiDE first removes background from the fits image. The background map is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html). It calculates the map by sigma-clipping method within the box of the size "bkg_box_size". 
+    * ASTRiDE first removes background from the fits image. By default, ASTRiDE calculate background level and its standard deviation using sigma-clipped statistics (i.e. ```remove_bkg='constant'```). If ```remove_bkg``` is 'map', the background map is derived using [Phoutils](http://photutils.readthedocs.org/en/latest/index.html). It calculates the map by sigma-clipping method within the box of the size "bkg_box_size". 
   
   * Contour map
     * Using the [scikit-image](http://scikit-image.org/), ASTRiDE derives the contour map of the fits image. The level of the contour is controlled by the "contour_threshold" value, such as: contour_threshold * background standard deviation (calculated when deriving the background map). Default "contour_threshold" is 3. The following images shows all the <b>borders</b> detected using the contour map.
