@@ -5,6 +5,7 @@ import pylab as pl
 
 from skimage import measure
 from astropy.io import fits
+from astropy.stats import sigma_clipped_stats
 from photutils.background import Background
 
 from astride.utils.edge import EDGE
@@ -18,6 +19,11 @@ class Streak:
     ----------
     filename : str
         Fits filename.
+    remove_bkg : {'constant', 'map'}, optional.
+        Which method to remove image background. 'constant' uses sigma-clipped
+        statistics of the image to calculate the constant background value.
+        'map' derives a background map of the image. Default is 'constant'.
+        If your image has varing background, use 'map'.
     bkg_box_size : int, optional
         Box size for background estimation.
     contour_threshold : float, optional
@@ -36,9 +42,9 @@ class Streak:
         Path to save figures and output files. If None, the base filename
         is used as the folder name.
     """
-    def __init__(self, filename, bkg_box_size=50, contour_threshold=3.,
-                 min_points=10, shape_cut=0.2, area_cut=10.,
-                 radius_dev_cut=0.5, connectivity_angle=3.,
+    def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
+                 contour_threshold=3., min_points=10, shape_cut=0.2,
+                 area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.,
                  output_path=None):
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
@@ -56,8 +62,16 @@ class Streak:
         # Filtered edges, so streak, by their morphologies and
         # also connected (i.e. linked) by their slope.
         self.streaks = None
+        # Statistics for the image data.
+        self._med = None
+        self._std = None
 
         # Other variables.
+        remove_bkg_options = ('constant', 'map')
+        if remove_bkg not in remove_bkg_options:
+            raise RuntimeError('"remove_bkg" must be the one among: %s' %
+                               ', '.join(remove_bkg_options))
+        self.remove_bkg = remove_bkg
         self.bkg_box_size = bkg_box_size
         self.contour_threshold = contour_threshold
 
@@ -82,7 +96,12 @@ class Streak:
     def detect(self):
         """Run the pipeline to detect streaks."""
         # Remove background.
-        self._remove_background()
+        if self.remove_bkg is 'map':
+            self._remove_background()
+        elif self.remove_bkg is 'constant':
+            _mean, self._med, self._std = \
+                sigma_clipped_stats(self.raw_image)
+            self.image = self.raw_image - self._med
 
         # Detect sources. Test purpose only.
         # self._detect_sources()
@@ -98,12 +117,14 @@ class Streak:
         self.background_map = self._bkg.background
         self.image = self.raw_image - self.background_map
 
+        self._med = self._bkg.background_median
+        self._std = self._bkg.background_rms_median
+
     def _detect_streaks(self):
         # Find contours.
         # Returned contours is the list of [row, columns] (i.e. [y, x])
-        bkg_rms = self._bkg.background_rms_median
         contours = measure.find_contours(
-            self.image, bkg_rms * self.contour_threshold, fully_connected='high'
+            self.image, self._std * self.contour_threshold, fully_connected='high'
                                          )
 
         # Quantify shapes of the contours and save them as 'edges'.
@@ -127,8 +148,8 @@ class Streak:
         fwhm = 3.
         detection_threshold = 3.
         sources = daofind(self.image,
-                          threshold=self._bkg.background_rms_median *
-                          detection_threshold, fwhm=fwhm)
+                          threshold=(self._med + self._std *
+                          detection_threshold), fwhm=fwhm)
         pl.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
 
     def _find_box(self, n, edges, xs, ys):
@@ -169,7 +190,7 @@ class Streak:
         else:
             return xs, ys
 
-    def plot_figures(self, cut_threshold=5.):
+    def plot_figures(self, cut_threshold=3.):
         """
         Save figures of detected streaks.
 
@@ -187,7 +208,8 @@ class Streak:
         # Background subtracted image,
         # so the median value should be close to zero.
         med = 0.
-        std = self._bkg.background_rms_median
+        std = self._std
+
         plot_data[np.where(self.image > med + cut_threshold * std)] = \
             med + cut_threshold * std
         plot_data[np.where(self.image < med - cut_threshold * std)] = \

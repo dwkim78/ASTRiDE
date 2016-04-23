@@ -186,8 +186,7 @@ class EDGE:
         radian2angle = 180. / np.pi
         for edge in self.edges:
             p1, s = leastsq(self.residuals, p0,
-                            args=(edge['x'][:-1],
-                                  edge['y'][:-1]))
+                            args=(edge['x'][:-1], edge['y'][:-1]))
             edge['slope'] = p1[0]
             edge['intercept'] = p1[1]
             edge['slope_angle'] = np.arctan(edge['slope']) * radian2angle

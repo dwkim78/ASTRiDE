@@ -1,4 +1,5 @@
 .idea
 dist
 astride.egg-info
+/astride/test/long
 *.pyc

@@ -172,7 +172,8 @@ You can replace "long.fits" with your own fits filename. There are many options 
 
 | Options | Description |
 |----:|:------------|
-| bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. |
+| remove_bkg | Choose a method to remove background of a fits image. Either 'constant' or 'map'. 'constant' calculates background statistics using the astropy sigma-clipped routine. 'map' derives a background map. 'map' is slow but relatively more accurate if the background is varying through the image field. Default is 'constant'. |
+| bkg_box_size  | Box size for calculating a background map of a fits image. Default is 50. Only used when ```remove_bkg``` = 'map'. |
 | contour_threshold  | Threshold to extract a contour map. If this value is high, only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
 | min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a length of ~5 pixels if the border is a streak-like object). Higher values, faster ASTRiDE runtime. |
 | shape_cut  | Empirical cut for shape factor. Default is 0.2. |
@@ -365,6 +366,9 @@ This will send log messages to both console and a log file. Note that the path m
 - real-time training of an outlier model to detect streaks?
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
+
+### v0.3.0
+- add an option to choose which method to use for the background removal (i.e. ```remove_bkg``` option). See [How to Use ASTRiDE](#4-how-to-use-astride) for details.
 
 ### v0.2.12
 - modify class/function comments so that it is more legible
