@@ -214,6 +214,7 @@ class Streak:
             med + cut_threshold * std
         plot_data[np.where(self.image < med - cut_threshold * std)] = \
             med - cut_threshold * std
+        pl.clf()
         pl.imshow(plot_data, origin='lower', cmap='gray')
 
         # Plot all raw borders. Test purpose only.
