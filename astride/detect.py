@@ -6,7 +6,7 @@ import pylab as pl
 from skimage import measure
 from astropy.io import fits
 from astropy.stats import sigma_clipped_stats
-from photutils.background import Background
+from photutils import Background2D, SigmaClip, MedianBackground
 
 from astride.utils.edge import EDGE
 
@@ -111,9 +111,12 @@ class Streak:
 
     def _remove_background(self):
         # Get background map and subtract.
-        self._bkg = Background(self.raw_image,
-                                (self.bkg_box_size, self.bkg_box_size),
-                                method='median')
+        sigma_clip = SigmaClip(sigma=3., iters=10)
+        bkg_estimator = MedianBackground()
+        self._bkg = Background2D(self.raw_image,
+                           (self.bkg_box_size, self.bkg_box_size),
+                           filter_size=(3, 3),
+                           sigma_clip=sigma_clip, bkg_estimator=bkg_estimator)
         self.background_map = self._bkg.background
         self.image = self.raw_image - self.background_map
 
