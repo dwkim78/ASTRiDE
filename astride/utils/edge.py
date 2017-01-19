@@ -328,7 +328,7 @@ if __name__ == '__main__':
     edge.quantify()
     edge.connect_edges()
     edges = edge.get_edges()
-    print edges
+    print(edges)
 
     # Plot the first edge, which is the only edge in the sample data.
     # Since the contour returned from scikit-image is a list of

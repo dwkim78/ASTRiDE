@@ -318,4 +318,4 @@ if __name__ == '__main__':
     streak.plot_figures()
     streak.write_outputs()
 
-    print '%.2f seconds' % (end - start)
+    print('%.2f seconds' % (end - start))
