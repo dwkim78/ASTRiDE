@@ -27,9 +27,7 @@ ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of
 
 ## 1. Dependency
 
-[Python 2.7+](https://www.python.org/) 
-
- * Not tested with Python 3.0+
+[Python 2.7+ and 3.5+](https://www.python.org/)
 
 [Numpy 1.11.2+](http://www.numpy.org/)
  
@@ -366,6 +364,9 @@ This will send log messages to both console and a log file. Note that the path m
 - real-time training of an outlier model to detect streaks?
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
+
+### v0.3.2
+- tested under Python 3.5
 
 ### v0.3.1
 - phoutils library update to v0.3.

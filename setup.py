@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='astride',
-    version='0.3.1',
+    version='0.3.2',
     description='Automated Streak Detection for High Velocity Objects',
     long_description=readme(),
     platforms=['any'],
@@ -27,7 +27,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Scientific/Engineering :: Astronomy'
     ]
 )
