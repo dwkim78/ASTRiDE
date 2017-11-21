@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='astride',
-    version='0.3.2',
+    version='0.3.3',
     description='Automated Streak Detection for High Velocity Objects',
     long_description=readme(),
     platforms=['any'],
@@ -16,7 +16,7 @@ setup(
     license='MIT',
     author='Dae-Won Kim',
     author_email='dwkim78@gmail.com',
-    install_requires=['numpy>=1.11.2', 'photutils>=0.3', 'astropy>=1.2',
+    install_requires=['numpy>=1.11.2', 'photutils>=0.4', 'astropy>=1.2',
                       'matplotlib>=1.5.3', 'scipy>=0.18.1',
                       'scikit-image>=0.12.3'],
     keywords=['astronomy', 'image', 'streak', 'satellite', 'meteor', 'NEO',

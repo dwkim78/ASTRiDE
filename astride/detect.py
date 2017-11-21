@@ -6,7 +6,8 @@ import pylab as pl
 from skimage import measure
 from astropy.io import fits
 from astropy.stats import sigma_clipped_stats
-from photutils import Background2D, SigmaClip, MedianBackground
+from astropy.stats import SigmaClip
+from photutils import Background2D, MedianBackground
 
 from astride.utils.edge import EDGE
 
