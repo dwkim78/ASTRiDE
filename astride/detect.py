@@ -259,7 +259,7 @@ class Streak:
 
         pl.xlabel('X/pixel')
         pl.ylabel('Y/pixel')
-        pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
+        pl.axis([0, self.image.shape[1], 0, self.image.shape[0]])
         pl.savefig('%sall.png' % self.output_path)
 
         # Plot all individual edges (connected).
