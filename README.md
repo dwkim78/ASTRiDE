@@ -29,23 +29,27 @@ ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of
 
 [Python 2.7+ and 3.5+](https://www.python.org/)
 
-[Numpy 1.11.2+](http://www.numpy.org/)
+[Numpy 1.14+](http://www.numpy.org/)
  
  * Numerical Python library.
 
-[Scikit-image 0.12.3+](http://scikit-image.org/)
+[Scipy 1.0.0+](https://www.scipy.org/)
+
+ * Scientific Python library.
+
+[Scikit-image 0.13.1+](http://scikit-image.org/)
  
  * To get a contour map of a fits image.
 
-[Astropy 1.2+](http://www.astropy.org/)
+[Astropy 3.0+](http://www.astropy.org/)
 
  * For reading a fits file.
 
-[Matplotlib 1.5.3+](http://matplotlib.org/)
+[Matplotlib 2.1.1+](http://matplotlib.org/)
 
  * For plotting figures.
 
-[Phoutils 0.3+](http://photutils.readthedocs.org/en/latest/index.html)
+[Phoutils 0.4+](http://photutils.readthedocs.org/en/latest/index.html)
 
  * For calculating background map of a fits image.
 
@@ -364,6 +368,11 @@ This will send log messages to both console and a log file. Note that the path m
 - real-time training of an outlier model to detect streaks?
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
+
+### v0.3.4
+- All Python library dependencies are updated to the latest versions.
+- Default output_path in Streak class is modified to include the full path of the input filepath.
+- X/y plot coordinate swapping bug fixed.
 
 ### v0.3.3
 - phoutils library update to v0.4.

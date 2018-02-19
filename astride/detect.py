@@ -40,8 +40,8 @@ class Streak:
     connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
     output_path: str, optional
-        Path to save figures and output files. If None, the base filename
-        is used as the folder name.
+        Path to save figures and output files. If None, the input folder name
+        and base filename is used as the output folder name.
     """
     def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
                  contour_threshold=3., min_points=10, shape_cut=0.2,
@@ -85,8 +85,8 @@ class Streak:
 
         # Set output path.
         if output_path is None:
-            output_path = './%s/' % \
-                          ('.'.join(os.path.basename(filename).split('.')[:-1]))
+            output_path = '%s' % \
+                          (filename[:filename.rfind('.')])
         if output_path[-1] != '/':
             output_path += '/'
         self.output_path = output_path
