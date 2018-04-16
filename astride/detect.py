@@ -23,7 +23,7 @@ class Streak:
     remove_bkg : {'constant', 'map'}, optional.
         Which method to remove image background. 'constant' uses sigma-clipped
         statistics of the image to calculate the constant background value.
-        'map' derives a background map of the image. Default is 'constant'.
+        'map' derives a background map of the image.Default is 'constant'.
         If your image has varing background, use 'map'.
     bkg_box_size : int, optional
         Box size for background estimation.
@@ -39,6 +39,8 @@ class Streak:
         An empirical radius deviation cut.
     connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
+    fully_connected: str, optional
+        See skimage.measure.find_contours for details.
     output_path: str, optional
         Path to save figures and output files. If None, the input folder name
         and base filename is used as the output folder name.
@@ -46,7 +48,7 @@ class Streak:
     def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
                  contour_threshold=3., min_points=10, shape_cut=0.2,
                  area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.,
-                 output_path=None):
+                 fully_connected='high', output_path=None):
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
         hdulist.close()
@@ -82,6 +84,7 @@ class Streak:
         self.area_cut = area_cut
         self.radius_dev_cut = radius_dev_cut
         self.connectivity_angle = connectivity_angle
+        self.fully_connected = fully_connected
 
         # Set output path.
         if output_path is None:
@@ -128,8 +131,8 @@ class Streak:
         # Find contours.
         # Returned contours is the list of [row, columns] (i.e. [y, x])
         contours = measure.find_contours(
-            self.image, self._std * self.contour_threshold, fully_connected='high'
-                                         )
+            self.image, self._std * self.contour_threshold,
+            fully_connected=self.fully_connected)
 
         # Quantify shapes of the contours and save them as 'edges'.
         edge = EDGE(contours, min_points=self.min_points,
@@ -147,13 +150,13 @@ class Streak:
         self.streaks = edge.get_edges()
 
     def _detect_sources(self):
-        from photutils import daofind
+        from photutils import DAOStarFinder
 
         fwhm = 3.
         detection_threshold = 3.
-        sources = daofind(self.image,
-                          threshold=(self._med + self._std *
-                          detection_threshold), fwhm=fwhm)
+        daofind = DAOStarFinder(threshold=(self._med + self._std *
+                                detection_threshold), fwhm=fwhm)
+        sources = daofind.find_stars(self.image)
         pl.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
 
     def _find_box(self, n, edges, xs, ys):

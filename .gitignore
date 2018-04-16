@@ -3,3 +3,4 @@ dist
 astride.egg-info
 /astride/test/long
 *.pyc
+/astride/datasets/samples/long/

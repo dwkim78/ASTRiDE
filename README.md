@@ -369,10 +369,14 @@ This will send log messages to both console and a log file. Note that the path m
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
 
+### v0.3.5
+- `fully_connected` parameter of `skimage.measure.find_contours` is exposed to Streak class.
+- fixed a bug when calling phoutils daofild.
+
 ### v0.3.4
-- All Python library dependencies are updated to the latest versions.
-- Default output_path in Streak class is modified to include the full path of the input filepath.
-- X/y plot coordinate swapping bug fixed.
+- all Python library dependencies are updated to the latest versions.
+- default output_path in Streak class is modified to include the full path of the input filepath.
+- x/y plot coordinate swapping bug fixed.
 
 ### v0.3.3
 - phoutils library update to v0.4.
