@@ -343,6 +343,32 @@ class Streak:
         except Exception as e:
             pass
 
+    def xy2sky2(self, filename, x, y):
+
+        """
+        Converts physical coordinates to WCS coordinates for calculations.
+        @param filename: FITS image file name with path.
+        @type filename: str
+        @param x: x coordinate of object.
+        @type x: float
+        @param y: y coordinate of object.
+        @type y: float
+        @return: list
+        """
+
+        try:
+            header = fits.getheader(filename)
+            w = WCS(header)
+            astcoords_deg = w.wcs_pix2world([[x, y]], 0)
+
+            astcoords = coordinates.SkyCoord(
+                astcoords_deg * u.deg, frame='icrs')
+
+            return(astcoords[0])
+
+        except Exception as e:
+            pass
+
     def write_outputs(self):
         """Write information of detected streaks."""
 
@@ -364,14 +390,16 @@ class Streak:
                        )
                 fp.writelines(line)
         elif self.wcsinfo == "yes":
-            fp.writelines('#ID odate x_center y_center ra dec area perimeter shape_factor ' +
+            fp.writelines('#ID odate x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter shape_factor ' +
                           'radius_deviation slope_angle intercept connectivity\n')
             for n, edge in enumerate(self.streaks):
-                line = '%2d %s %7.2f %7.2f %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                line = '%2d %s %7.2f %7.2f %s %s %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
                        % \
                        (
                            edge['index'], self.odate, edge['x_center'], edge['y_center'],
                            self.xy2sky(self.filename, edge['x_center'], edge['y_center']),
+                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).ra.degree,
+                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).dec.degree,
                            edge['area'], edge['perimeter'], edge['shape_factor'],
                            edge['radius_deviation'], edge['slope_angle'],
                            edge['intercept'], edge['connectivity']
