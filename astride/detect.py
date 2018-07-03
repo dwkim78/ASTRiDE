@@ -58,14 +58,6 @@ class Streak:
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
 
-        # calculating delta obs from exptime
-        dateobs = hdulist[0].header["date-obs"]
-        exptime = hdulist[0].header["exptime"]
-        t1 = Time("{0}".format(dateobs),
-                  out_subfmt="date_hms")
-        dt = TimeDelta(float(exptime) / 2, format='sec')
-        self.odate = t1 + dt
-
         # check wCS info
         try:
             wcsinfo = hdulist[0].header["CTYPE1"]
@@ -377,26 +369,26 @@ class Streak:
 
         fp = open('%sstreaks.txt' % self.output_path, 'w')
         if self.wcsinfo == "no":
-            fp.writelines('#ID odate x_center y_center area perimeter shape_factor ' +
+            fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
                           'radius_deviation slope_angle intercept connectivity\n')
             for n, edge in enumerate(self.streaks):
-                line = '%2d %s %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
                        % \
                        (
-                           edge['index'], self.odate, edge['x_center'], edge['y_center'],
+                           edge['index'], edge['x_center'], edge['y_center'],
                            edge['area'], edge['perimeter'], edge['shape_factor'],
                            edge['radius_deviation'], edge['slope_angle'],
                            edge['intercept'], edge['connectivity']
                        )
                 fp.writelines(line)
         elif self.wcsinfo == "yes":
-            fp.writelines('#ID odate x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter shape_factor ' +
+            fp.writelines('#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter shape_factor ' +
                           'radius_deviation slope_angle intercept connectivity\n')
             for n, edge in enumerate(self.streaks):
-                line = '%2d %s %7.2f %7.2f %s %s %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                line = '%2d %7.2f %7.2f %s %s %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
                        % \
                        (
-                           edge['index'], self.odate, edge['x_center'], edge['y_center'],
+                           edge['index'], edge['x_center'], edge['y_center'],
                            self.xy2sky(self.filename, edge['x_center'], edge['y_center']),
                            self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).ra.degree,
                            self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).dec.degree,
