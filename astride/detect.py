@@ -317,8 +317,8 @@ class Streak:
 
         """
         Converts physical coordinates to WCS coordinates for STDOUT.
-        @param file_name: FITS image file name with path.
-        @type file_name: str
+        @param filename: FITS image file name with path.
+        @type filename: str
         @param x: x coordinate of object.
         @type x: float
         @param y: y coordinate of object.
