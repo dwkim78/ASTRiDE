@@ -11,8 +11,6 @@ from astropy.stats import SigmaClip
 from astropy import coordinates
 from astropy import units as u
 from astropy.wcs import WCS
-from astropy.time import TimeDelta
-from astropy.time import Time
 from photutils import Background2D, MedianBackground
 
 from astride.utils.edge import EDGE
@@ -62,12 +60,10 @@ class Streak:
         try:
             wcsinfo = hdulist[0].header["CTYPE1"]
             if wcsinfo:
-                print("WCS solution is found!")
-                self.wcsinfo = "yes"
+                self.wcsinfo = True
                 self.filename = filename
         except:
-            print("WCS solution is NOT found!")
-            self.wcsinfo = "no"
+            self.wcsinfo = False
 
         hdulist.close()
 
@@ -243,14 +239,14 @@ class Streak:
         pl.imshow(plot_data, origin='lower', cmap='gray')
 
         # Plot all raw borders. Test purpose only.
-        #edges = self.raw_borders
-        #for n, edge in enumerate(edges):
-        #    pl.plot(edge['x'], edge['y'])
-        #    pl.text(edge['x'][0], edge['y'][1],
-        #            '%.2f' % (edge['shape_factor']), color='b', fontsize=10)
-        #pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
-        #pl.savefig('%sall.png' % self.output_path)
-        #return 0
+        # edges = self.raw_borders
+        # for n, edge in enumerate(edges):
+        #     pl.plot(edge['x'], edge['y'])
+        #     pl.text(edge['x'][0], edge['y'][1],
+        #             '%.2f' % (edge['shape_factor']), color='b', fontsize=10)
+        # pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
+        # pl.savefig('%sall.png' % self.output_path)
+        # return 0
 
         edges = self.streaks
         # Plot all contours.
@@ -305,19 +301,25 @@ class Streak:
         # Clear figure.
         pl.clf()
 
-    def xy2sky(self, filename, x, y, sep=":"):
-
+    def xy2sky(self, filename, x, y, sep=':'):
         """
         Converts physical coordinates to WCS coordinates for STDOUT.
-        @param filename: FITS image file name with path.
-        @type filename: str
-        @param x: x coordinate of object.
-        @type x: float
-        @param y: y coordinate of object.
-        @type y: float
-        @param sep: delimiter for HMSDMS format.
-        @type sep: float
-        @return: str
+
+        Parameters
+        ----------
+        filename: str
+            FITS image file name with path.
+        x: float
+            x coordinate of object.
+        y: float
+            y coordinate of object.
+        sep: float
+            delimiter for HMSDMS format.
+
+        Returns
+        -------
+        coord: str
+            Converted string of coordinate.
         """
 
         try:
@@ -330,22 +332,32 @@ class Streak:
             alpha = c.to_string(style='hmsdms', sep=sep, precision=2)[0]
             delta = c.to_string(style='hmsdms', sep=sep, precision=1)[0]
 
-            return("{0} {1}".format(alpha.split(" ")[0],
-                                    delta.split(" ")[1]))
+            coord = '{0} {1}'.format(alpha.split(' ')[0],
+                                    delta.split(' ')[1])
+            return coord
         except Exception as e:
+            _ = e
             pass
 
     def xy2sky2(self, filename, x, y):
-
         """
-        Converts physical coordinates to WCS coordinates for calculations.
-        @param filename: FITS image file name with path.
-        @type filename: str
-        @param x: x coordinate of object.
-        @type x: float
-        @param y: y coordinate of object.
-        @type y: float
-        @return: list
+        Converts physical coordinates to WCS coordinates for STDOUT.
+
+        Parameters
+        ----------
+        filename: str
+            FITS image file name with path.
+        x: float
+            x coordinate of object.
+        y: float
+            y coordinate of object.
+        sep: float
+            delimiter for HMSDMS format.
+
+        Returns
+        -------
+        astcoords: list
+            a list of coordinates.
         """
 
         try:
@@ -356,9 +368,10 @@ class Streak:
             astcoords = coordinates.SkyCoord(
                 astcoords_deg * u.deg, frame='icrs')
 
-            return(astcoords[0])
+            return astcoords[0]
 
         except Exception as e:
+            _ = e
             pass
 
     def write_outputs(self):
@@ -368,42 +381,53 @@ class Streak:
             os.makedirs(self.output_path)
 
         fp = open('%sstreaks.txt' % self.output_path, 'w')
-        if self.wcsinfo == "no":
+        if not self.wcsinfo:
             fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
-                          'radius_deviation slope_angle intercept connectivity\n')
+                          'radius_deviation slope_angle intercept ' +
+                          'connectivity\n')
             for n, edge in enumerate(self.streaks):
-                line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
-                       % \
+                line_str = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f ' + \
+                           '%6.2f %5.2f %7.2f %2d\n'
+                line = line_str % \
                        (
                            edge['index'], edge['x_center'], edge['y_center'],
-                           edge['area'], edge['perimeter'], edge['shape_factor'],
+                           edge['area'], edge['perimeter'],
+                           edge['shape_factor'],
                            edge['radius_deviation'], edge['slope_angle'],
                            edge['intercept'], edge['connectivity']
                        )
                 fp.writelines(line)
-        elif self.wcsinfo == "yes":
-            fp.writelines('#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter shape_factor ' +
-                          'radius_deviation slope_angle intercept connectivity\n')
+        elif self.wcsinfo:
+            fp.writelines('#ID x_center y_center ra(hms) dec(dms) ra(deg) ' +
+                          'dec(deg) area perimeter shape_factor ' +
+                          'radius_deviation slope_angle intercept ' +
+                          'connectivity\n')
             for n, edge in enumerate(self.streaks):
-                line = '%2d %7.2f %7.2f %s %s %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
-                       % \
+                line_str = '%2d %7.2f %7.2f %s %s %s %6.1f %6.1f ' + \
+                           '%6.3f %6.2f %5.2f %7.2f %2d\n'
+                line = line_str % \
                        (
                            edge['index'], edge['x_center'], edge['y_center'],
-                           self.xy2sky(self.filename, edge['x_center'], edge['y_center']),
-                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).ra.degree,
-                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).dec.degree,
-                           edge['area'], edge['perimeter'], edge['shape_factor'],
+                           self.xy2sky(self.filename, edge['x_center'],
+                                       edge['y_center']),
+                           self.xy2sky2(self.filename, edge['x_center'],
+                                        edge['y_center']).ra.degree,
+                           self.xy2sky2(self.filename, edge['x_center'],
+                                        edge['y_center']).dec.degree,
+                           edge['area'], edge['perimeter'],
+                           edge['shape_factor'],
                            edge['radius_deviation'], edge['slope_angle'],
                            edge['intercept'], edge['connectivity']
                        )
                 fp.writelines(line)
         fp.close()
 
+
 if __name__ == '__main__':
     import time
 
     streak = Streak(sys.argv[1])
-    #streak = Streak('/Users/kim/Dropbox/iPythonNotebook/ASTRiDE/mgm035.fts',
+    # streak = Streak('/Users/kim/Dropbox/iPythonNotebook/ASTRiDE/mgm035.fts',
     #                shape_cut=0.3, radius_dev_cut=0.4)
 
     start = time.time()

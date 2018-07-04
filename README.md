@@ -123,6 +123,7 @@ The output text file named as "streaks.txt" contains following information.
 |----:|:------------|
 | ID  | Index |
 | x_center, y_center  | Coordinate of the center  |
+| RA, Dec | RA and Dec coordinates if a FITS file provides WCS header |
 | area  | Area inside a streak  |
 | perimeter  | Perimeter of a streak  |
 | shape_factor  | 4 * PI * area / perimeter^2 |
@@ -132,7 +133,7 @@ The output text file named as "streaks.txt" contains following information.
 | connectivity  | ID of another streak that is likely to be linked to the current streak  |
 
 
-These information are accessible using the ASTRiDE Streak instance. For details, see [this section](#accessible-information-inside-the-streak-instance).
+Most of these information are accessible using the ASTRiDE Streak instance as well. For details, see [this section](#accessible-information-inside-the-streak-instance).
 
 
 ## 4. How to Use ASTRiDE? 
@@ -370,6 +371,9 @@ This will send log messages to both console and a log file. Note that the path m
 - real-time training of an outlier model to detect streaks?
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
+
+### v0.3.6
+- Sky coordinates are also reported in RA, Dec
 
 ### v0.3.5
 - `fully_connected` parameter of `skimage.measure.find_contours` is exposed to Streak class.
