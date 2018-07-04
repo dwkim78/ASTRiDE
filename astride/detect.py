@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 import pylab as pl
@@ -7,6 +8,11 @@ from skimage import measure
 from astropy.io import fits
 from astropy.stats import sigma_clipped_stats
 from astropy.stats import SigmaClip
+from astropy import coordinates
+from astropy import units as u
+from astropy.wcs import WCS
+from astropy.time import TimeDelta
+from astropy.time import Time
 from photutils import Background2D, MedianBackground
 
 from astride.utils.edge import EDGE
@@ -51,6 +57,18 @@ class Streak:
                  fully_connected='high', output_path=None):
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
+
+        # check wCS info
+        try:
+            wcsinfo = hdulist[0].header["CTYPE1"]
+            if wcsinfo:
+                print("WCS solution is found!")
+                self.wcsinfo = "yes"
+                self.filename = filename
+        except:
+            print("WCS solution is NOT found!")
+            self.wcsinfo = "no"
+
         hdulist.close()
 
         # Raw image.
@@ -287,6 +305,62 @@ class Streak:
         # Clear figure.
         pl.clf()
 
+    def xy2sky(self, filename, x, y, sep=":"):
+
+        """
+        Converts physical coordinates to WCS coordinates for STDOUT.
+        @param filename: FITS image file name with path.
+        @type filename: str
+        @param x: x coordinate of object.
+        @type x: float
+        @param y: y coordinate of object.
+        @type y: float
+        @param sep: delimiter for HMSDMS format.
+        @type sep: float
+        @return: str
+        """
+
+        try:
+            header = fits.getheader(filename)
+            w = WCS(header)
+            astcoords_deg = w.wcs_pix2world([[x, y]], 0)
+            c = coordinates.SkyCoord(astcoords_deg * u.deg,
+                                             frame='icrs')
+
+            alpha = c.to_string(style='hmsdms', sep=sep, precision=2)[0]
+            delta = c.to_string(style='hmsdms', sep=sep, precision=1)[0]
+
+            return("{0} {1}".format(alpha.split(" ")[0],
+                                    delta.split(" ")[1]))
+        except Exception as e:
+            pass
+
+    def xy2sky2(self, filename, x, y):
+
+        """
+        Converts physical coordinates to WCS coordinates for calculations.
+        @param filename: FITS image file name with path.
+        @type filename: str
+        @param x: x coordinate of object.
+        @type x: float
+        @param y: y coordinate of object.
+        @type y: float
+        @return: list
+        """
+
+        try:
+            header = fits.getheader(filename)
+            w = WCS(header)
+            astcoords_deg = w.wcs_pix2world([[x, y]], 0)
+
+            astcoords = coordinates.SkyCoord(
+                astcoords_deg * u.deg, frame='icrs')
+
+            return(astcoords[0])
+
+        except Exception as e:
+            pass
+
     def write_outputs(self):
         """Write information of detected streaks."""
 
@@ -294,24 +368,41 @@ class Streak:
             os.makedirs(self.output_path)
 
         fp = open('%sstreaks.txt' % self.output_path, 'w')
-        fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
-                      'radius_deviation slope_angle intercept connectivity\n')
-        for n, edge in enumerate(self.streaks):
-            line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
-                   % \
-                   (
-                       edge['index'], edge['x_center'], edge['y_center'],
-                       edge['area'], edge['perimeter'], edge['shape_factor'],
-                       edge['radius_deviation'], edge['slope_angle'],
-                       edge['intercept'], edge['connectivity']
-                   )
-            fp.writelines(line)
+        if self.wcsinfo == "no":
+            fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
+                          'radius_deviation slope_angle intercept connectivity\n')
+            for n, edge in enumerate(self.streaks):
+                line = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                       % \
+                       (
+                           edge['index'], edge['x_center'], edge['y_center'],
+                           edge['area'], edge['perimeter'], edge['shape_factor'],
+                           edge['radius_deviation'], edge['slope_angle'],
+                           edge['intercept'], edge['connectivity']
+                       )
+                fp.writelines(line)
+        elif self.wcsinfo == "yes":
+            fp.writelines('#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter shape_factor ' +
+                          'radius_deviation slope_angle intercept connectivity\n')
+            for n, edge in enumerate(self.streaks):
+                line = '%2d %7.2f %7.2f %s %s %s %6.1f %6.1f %6.3f %6.2f %5.2f %7.2f %2d\n' \
+                       % \
+                       (
+                           edge['index'], edge['x_center'], edge['y_center'],
+                           self.xy2sky(self.filename, edge['x_center'], edge['y_center']),
+                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).ra.degree,
+                           self.xy2sky2(self.filename, edge['x_center'], edge['y_center']).dec.degree,
+                           edge['area'], edge['perimeter'], edge['shape_factor'],
+                           edge['radius_deviation'], edge['slope_angle'],
+                           edge['intercept'], edge['connectivity']
+                       )
+                fp.writelines(line)
         fp.close()
 
 if __name__ == '__main__':
     import time
 
-    streak = Streak('./datasets/samples/long.fits')
+    streak = Streak(sys.argv[1])
     #streak = Streak('/Users/kim/Dropbox/iPythonNotebook/ASTRiDE/mgm035.fts',
     #                shape_cut=0.3, radius_dev_cut=0.4)
 
