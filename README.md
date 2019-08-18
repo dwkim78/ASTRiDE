@@ -86,6 +86,12 @@ python setup.py install
 You can edit ```setup.py```, if you do not want to update your own Python libraries (i.e. edit the ```install_requires``` variable).
 
 
+### 2.1 Installation on Raspberry Pi 4
+
+Please see the https://github.com/thomasjacquin/allsky/issues/84#issuecomment-519699127
+
+In short, 1) install pip, 2) install required packages, 3) install ASTRiDE, and 4) test ASTRiDE. It is tested on Raspberry Pi 4. 
+
 ## 3. Test
 
 To check if ASTRiDE is correctly installed, type following commands in your Python console.
