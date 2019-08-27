@@ -334,7 +334,15 @@ Although ASTRiDE is not degisned to detect curves caused by gravitational lensin
 
 <div align="center"> <img src="./astride/datasets/images/SDSSCGB8842.3.png"><br/>[ Gravitational Lensing near SDSSCGB8842.3 and SDSSCGB8842.4 ]</div>
 
+As the figure shows, ASTRiDE detected four curved streaks around the galaxies. In this example, we tuned five parameters of ASTRiDE as follows:
 
+| Parameter        | Value |
+|-----------------:|-------|
+|contour_threshold | 5.0   |
+|shape_cut         | 0.4   |
+|radius_dev_cut    | 0.4   |
+|area_cut          | 100   |
+|fully_connected   | low   |
 
 ### System Requirement
  
