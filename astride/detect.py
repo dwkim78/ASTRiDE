@@ -51,7 +51,7 @@ class Streak:
     """
     def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
                  contour_threshold=3., min_points=10, shape_cut=0.2,
-                 area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.,
+                 area_cut=20., radius_dev_cut=0.5, connectivity_angle=3.,
                  fully_connected='high', output_path=None):
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
@@ -272,7 +272,7 @@ class Streak:
                 y_max = min(np.max(ys) + box_margin, self.image.shape[1])
                 box_x = [x_min, x_min, x_max, x_max]
                 box_y = [y_min, y_max, y_max, y_min]
-                pl.fill(box_x, box_y, ls='--', fill=False, ec='r', lw=2)
+                # pl.fill(box_x, box_y, ls='--', fill=False, ec='r', lw=2)
                 edge['box_plotted'] = True
 
         pl.xlabel('X/pixel')

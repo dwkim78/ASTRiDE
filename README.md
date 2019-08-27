@@ -339,10 +339,8 @@ As the figure shows, ASTRiDE detected four curved streaks around the galaxies. I
 | Parameter        | Value |
 |-----------------:|-------|
 |contour_threshold | 5.0   |
-|shape_cut         | 0.4   |
 |radius_dev_cut    | 0.4   |
 |area_cut          | 100   |
-|fully_connected   | low   |
 
 ### System Requirement
  
