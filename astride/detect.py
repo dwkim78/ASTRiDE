@@ -253,7 +253,8 @@ class Streak:
         for n, edge in enumerate(edges):
             pl.plot(edge['x'], edge['y'])
             pl.text(edge['x'][0], edge['y'][1],
-                    '%d' % (edge['index']), color='b', fontsize=15)
+                    '%d' % (edge['index']), color='y', fontsize=15,
+                    weight='bold')
 
         # Plot boxes.
         # Box margin in pixel.
