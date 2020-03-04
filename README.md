@@ -434,7 +434,23 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## Citation
 
-If you use this package for science publication, a citation to the current [github repository](https://github.com/dwkim78/ASTRiDE) would be appreciated.
+If you use this package for science publication, a citation to the [ASCL entry](https://www.ascl.net/1605.009) would be appreciated, which is as follows:
+
+```text
+@MISC{2016ascl.soft05009K,
+       author = {{Kim}, Dae-Won},
+        title = "{ASTRiDE: Automated Streak Detection for Astronomical Images}",
+     keywords = {Software},
+         year = 2016,
+        month = may,
+          eid = {ascl:1605.009},
+        pages = {ascl:1605.009},
+archivePrefix = {ascl},
+       eprint = {1605.009},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2016ascl.soft05009K},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+```
 
 ## Contact
 Dae-Won Kim, email: dwkim78 at gmail.com
