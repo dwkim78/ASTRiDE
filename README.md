@@ -393,6 +393,10 @@ This will send log messages to both console and a log file. Note that the path m
 ### v?.?.?
 - Add RA, Dec to astride instance so that it is accessible internally.
 
+
+### v0.3.7
+- Fix minor bugs.
+
 ### v0.3.6
 - Sky coordinates are also reported in RA, Dec
 
