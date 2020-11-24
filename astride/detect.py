@@ -129,7 +129,7 @@ class Streak:
 
     def _remove_background(self):
         # Get background map and subtract.
-        sigma_clip = SigmaClip(sigma=3., iters=10)
+        sigma_clip = SigmaClip(sigma=3., maxiters=10)
         bkg_estimator = MedianBackground()
         self._bkg = Background2D(self.raw_image,
                            (self.bkg_box_size, self.bkg_box_size),
