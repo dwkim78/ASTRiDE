@@ -56,7 +56,7 @@ class Streak:
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
 
-        # check wCS info
+        # check WCS info
         try:
             wcsinfo = hdulist[0].header["CTYPE1"]
             if wcsinfo:

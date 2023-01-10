@@ -61,12 +61,6 @@ These libraries will be automatically installed if your machine does not have th
 The easiest way to install the ASTRiDE package is:
 
 ```python
-pip install astride
-```
-
-Or,
-
-```python
 pip install git+https://github.com/dwkim78/ASTRiDE
 ```
 

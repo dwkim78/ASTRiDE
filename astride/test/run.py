@@ -13,8 +13,9 @@ def test():
     logger.info('Read a fits file..')
 
     module_path = dirname(__file__)
-    file_path = join(module_path, '../datasets/samples', 'long.fits')
-    streak = Streak(file_path, output_path='./long/')
+
+    # file_path = join(module_path, '../datasets/samples', 'long.fits')
+    # streak = Streak(file_path, output_path='./long/')
 
     # file_path = '/Users/kim/Temp/hst_13003_54_wfc3_ir_f110w_drz_saved.fits'
     # streak = Streak(file_path, contour_threshold=5, radius_dev_cut=0.4,
@@ -31,6 +32,10 @@ def test():
 
     # file_path = '/Users/kim/Temp/dss2.17.00.00+30.00.00.fits'
     # streak = Streak(file_path)
+
+    file_path = '/Users/kim/Downloads/for_dwkim_2022_06_30/fits/' \
+                '2022_06_29_16_14_01_000_011107-stacked-tn1657066011.fits'
+    streak = Streak(file_path)
 
     logger.info('Search streaks..')
     streak.detect()
