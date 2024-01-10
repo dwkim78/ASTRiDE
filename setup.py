@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='astride',
-    version='0.3.6',
+    version='0.3.7',
     description='Automated Streak Detection for High Velocity Objects',
     long_description=readme(),
     platforms=['any'],

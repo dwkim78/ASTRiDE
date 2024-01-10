@@ -4,3 +4,4 @@ astride.egg-info
 /astride/test/long
 *.pyc
 /astride/datasets/samples/long/
+.DS_Store

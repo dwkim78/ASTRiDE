@@ -1,6 +1,7 @@
 import numpy as np
 
-from sklearn.cluster import Birch, KMeans, AgglomerativeClustering
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 
 
 class Outlier:
@@ -15,11 +16,10 @@ class Outlier:
     edges: array_like
         A list of an edge instance.
     """
-    def __init__(self, edges, branching_factor=50, threshold=0.1):
+    def __init__(self, edges):
         # Make features list.
         features = []
-        for i in range(len(edges)):
-            edge = edges[i]
+        for edge in edges:
             features.append([edge['perimeter'], edge['area'],
                              edge['shape_factor'], edge['radius_deviation']])
         features = np.array(features)
@@ -33,36 +33,18 @@ class Outlier:
             normed_features[::, i] -= avg
             normed_features[::, i] /= avg
 
+        self.edges = edges
         self.features = features
         self.normed_features = normed_features
-        self.branching_factor = branching_factor
-        self.threshold = threshold
-        #self.run(Birch, branching_factor=50, threshold=0.1, n_clusters=2)
-        self.run(KMeans, n_clusters=2)
-        #self.run(AgglomerativeClustering, n_clusters=2)
 
-    def run(self, clf_fnt, **kwargs):
+    def run(self, clf_fnt=IsolationForest, **kwargs):
         """
         This routine trains an outlier model to find outliers (i.e. streaks).
         """
-        n_iter = 0
-        curr_features = self.features.copy()
         curr_normed_features = self.normed_features.copy()
-        while True and n_iter < 3:
-            clf = clf_fnt(**kwargs).fit(curr_normed_features)
+        clf = clf_fnt(**kwargs).fit(curr_normed_features)
 
-            if len(curr_features[(clf.labels_ == 1)]) >= 5:
-                break
+        pred = clf.predict(curr_normed_features)
 
-            print(clf.labels_)
-            print(curr_features[(clf.labels_ == 1)])
-
-            curr_features = curr_features[(clf.labels_ == 0)]
-            curr_normed_features = curr_normed_features[(clf.labels_ == 0)]
-            n_iter += 1
-
-
-
-
-
-
+        # return outliers' edges.
+        return np.array(self.edges)[np.where(pred==-1)]

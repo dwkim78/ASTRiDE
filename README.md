@@ -8,8 +8,7 @@
 <br/>
 ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of each object (i.e. "[boundary-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)" or "[contour-tracing](https://en.wikipedia.org/wiki/Boundary_tracing)") and their morphological parameters. Any kinds of fast moving objects such as [meteors](https://en.wikipedia.org/wiki/Meteoroid#Meteor), [satellites](https://en.wikipedia.org/wiki/Satellite), [near-Earth objects (NEOs)](https://en.wikipedia.org/wiki/Near-Earth_object), or even [cosmic rays](https://en.wikipedia.org/wiki/Cosmic_ray) could leave streak-like traces in the images. 
 
- 
- The basic idea of ASTRiDE is from my previous work ([Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K)), which also tried to detect streaks using a similar algorithm (i.e. boundary-tracing). Nevertheless, ASTRiDE uses an improved algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE can detect not only long streaks but also relatively short or curved streaks whereas the original algorithm is less likely to detect such short or curved streaks.
+ ASTRiDE uses an algorithm for quantifying the shape of each border to determine whether or not the border is a streak. ASTRiDE can detect not only long streaks but also relatively short or curved streaks.
 
 
 ## Index
@@ -62,12 +61,6 @@ These libraries will be automatically installed if your machine does not have th
 The easiest way to install the ASTRiDE package is:
 
 ```python
-pip install astride
-```
-
-Or,
-
-```python
 pip install git+https://github.com/dwkim78/ASTRiDE
 ```
 
@@ -85,6 +78,12 @@ python setup.py install
 
 You can edit ```setup.py```, if you do not want to update your own Python libraries (i.e. edit the ```install_requires``` variable).
 
+
+### 2.1 Installation on Raspberry Pi 4
+
+Please see the https://github.com/thomasjacquin/allsky/issues/84#issuecomment-519699127
+
+In short, 1) install pip, 2) install required packages, 3) install ASTRiDE, and 4) test ASTRiDE. It is tested on Raspberry Pi 4. 
 
 ## 3. Test
 
@@ -323,6 +322,19 @@ The following example using the image of [M35 (NGC 2168)](http://astro.uchicago.
 
 In the image, you can see the diffraction spike of the brightest stars, which is a sort of streaks. Left panel shows the result using the default ASTRiDE parameter setting, and it did not detect any streak. In the right panel, the two parameters were tuned (i.e. ```shape_cut = 0.3``` and ```radius_dev_cut = 0.4```), and ASTRiDE detected the spike. As you can clearly see, the spike shares its border with other stars, and it does not actually look like a streak anymore. That is the reason why it was not detected with the default setting. Nevertheless, as this example shows, you can decide your own criteria based on your needs.
 
+### 7. Application to the Astronomical Gravitational Lensing Image
+
+Although ASTRiDE is not degisned to detect curves caused by gravitational lensing (e.g. see the following image), ASTRiDE can detects such curves as well.
+
+<div align="center"> <img src="./astride/datasets/images/SDSSCGB8842.3.png"><br/>[ Gravitational Lensing near SDSSCGB8842.3 and SDSSCGB8842.4 ]</div>
+
+As the figure shows, ASTRiDE detected four curved streaks around the galaxies. In this example, we tuned five parameters of ASTRiDE as follows:
+
+| Parameter        | Value |
+|-----------------:|-------|
+|contour_threshold | 5.0   |
+|radius_dev_cut    | 0.4   |
+|area_cut          | 100   |
 
 ### System Requirement
  
@@ -375,6 +387,10 @@ This will send log messages to both console and a log file. Note that the path m
 ### v?.?.?
 - Add RA, Dec to astride instance so that it is accessible internally.
 
+
+### v0.3.7
+- Fix minor bugs.
+
 ### v0.3.6
 - Sky coordinates are also reported in RA, Dec
 
@@ -416,7 +432,23 @@ This will send log messages to both console and a log file. Note that the path m
 
 ## Citation
 
-If you use this package for science publication, a citation to the paper [Kim+ 2005](http://adsabs.harvard.edu/abs/2005JASS...22..385K) and also to the current [github repository](https://github.com/dwkim78/ASTRiDE) would be appreciated.
+If you use this package for science publication, a citation to the [ASCL entry](https://www.ascl.net/1605.009) would be appreciated, which is as follows:
+
+```text
+@MISC{2016ascl.soft05009K,
+       author = {{Kim}, Dae-Won},
+        title = "{ASTRiDE: Automated Streak Detection for Astronomical Images}",
+     keywords = {Software},
+         year = 2016,
+        month = may,
+          eid = {ascl:1605.009},
+        pages = {ascl:1605.009},
+archivePrefix = {ascl},
+       eprint = {1605.009},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2016ascl.soft05009K},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+```
 
 ## Contact
 Dae-Won Kim, email: dwkim78 at gmail.com
@@ -427,4 +459,3 @@ Webpage: https://sites.google.com/site/dwkim78/
 #### Keywords
 
 astronomy - fits image - streak - satellite - meteor - NEO - fast-moving objects - boundary-tracing - contour-tracing - morphology
-

@@ -51,12 +51,12 @@ class Streak:
     """
     def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
                  contour_threshold=3., min_points=10, shape_cut=0.2,
-                 area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.,
+                 area_cut=20., radius_dev_cut=0.5, connectivity_angle=3.,
                  fully_connected='high', output_path=None):
         hdulist = fits.open(filename)
         raw_image = hdulist[0].data.astype(np.float64)
 
-        # check wCS info
+        # check WCS info
         try:
             wcsinfo = hdulist[0].header["CTYPE1"]
             if wcsinfo:
@@ -129,7 +129,7 @@ class Streak:
 
     def _remove_background(self):
         # Get background map and subtract.
-        sigma_clip = SigmaClip(sigma=3., iters=10)
+        sigma_clip = SigmaClip(sigma=3., maxiters=10)
         bkg_estimator = MedianBackground()
         self._bkg = Background2D(self.raw_image,
                            (self.bkg_box_size, self.bkg_box_size),
@@ -253,7 +253,8 @@ class Streak:
         for n, edge in enumerate(edges):
             pl.plot(edge['x'], edge['y'])
             pl.text(edge['x'][0], edge['y'][1],
-                    '%d' % (edge['index']), color='b', fontsize=15)
+                    '%d' % (edge['index']), color='y', fontsize=15,
+                    weight='bold')
 
         # Plot boxes.
         # Box margin in pixel.
@@ -271,7 +272,7 @@ class Streak:
                 y_max = min(np.max(ys) + box_margin, self.image.shape[1])
                 box_x = [x_min, x_min, x_max, x_max]
                 box_y = [y_min, y_max, y_max, y_min]
-                pl.fill(box_x, box_y, ls='--', fill=False, ec='r', lw=2)
+                # pl.fill(box_x, box_y, ls='--', fill=False, ec='r', lw=2)
                 edge['box_plotted'] = True
 
         pl.xlabel('X/pixel')
