@@ -292,9 +292,9 @@ class Streak:
                 ys = []
                 self._find_box(edge['index'], edges, xs, ys)
                 x_min = max(np.min(xs) - box_margin, 0)
-                x_max = min(np.max(xs) + box_margin, self.image.shape[0])
+                x_max = min(np.max(xs) + box_margin, self.image.shape[1])
                 y_min = max(np.min(ys) - box_margin, 0)
-                y_max = min(np.max(ys) + box_margin, self.image.shape[1])
+                y_max = min(np.max(ys) + box_margin, self.image.shape[0])
                 edge['box_plotted'] = True
                 pl.axis([x_min, x_max, y_min, y_max])
                 pl.savefig('%s%d.png' % (self.output_path, edge['index']))
