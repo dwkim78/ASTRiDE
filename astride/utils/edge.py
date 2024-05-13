@@ -67,6 +67,8 @@ class EDGE:
     def quantify(self):
         """Quantify shape of the contours."""
         four_pi = 4. * np.pi
+        p0 = [0., 0.]
+        radian2angle = 180. / np.pi
         for edge in self.edges:
             # Positions
             x = edge['x']
@@ -93,6 +95,68 @@ class EDGE:
             edge['x_max'] = np.max(x)
             edge['y_min'] = np.min(y)
             edge['y_max'] = np.max(y)
+
+            # TODO: perfectly vertical line?
+            # Fitting a straight line to each edge.
+            p1, s = leastsq(self.residuals, p0, args=(edge['x'][:-1], edge['y'][:-1]))
+            edge['slope'] = p1[0]
+            edge['intercept'] = p1[1]
+            edge['slope_angle'] = np.arctan(edge['slope']) * radian2angle
+
+            # Thickness
+            # Calculate orthogonal distances to the line
+            distances = np.abs(
+                edge["slope"] * edge["x"] - edge["y"] + edge["intercept"]
+            ) / np.sqrt(edge["slope"] ** 2 + 1)
+            # Use median to find central distance
+            median_distance = np.median(distances)
+            edge["thickness"] = 2 * median_distance
+
+            # Extreme Points and Length
+            # Calculate squared pairwise distances by computing outer differences and
+            # squaring them for both x and y coordinates (alternative: NumPy broadcasting)
+            dist_squared_matrix = (
+                np.add.outer(edge["x"], -edge["x"]) ** 2
+                + np.add.outer(edge["y"], -edge["y"]) ** 2
+            )
+
+            # Find the index of the maximum distance squared and its value
+            idx_max = np.unravel_index(
+                np.argmax(dist_squared_matrix), dist_squared_matrix.shape
+            )
+            p1 = (edge["x"][idx_max[0]], edge["y"][idx_max[0]])
+            p2 = (edge["x"][idx_max[1]], edge["y"][idx_max[1]])
+
+            def project_point(point, slope, intercept):
+                """Project a point onto the line defined by slope and intercept."""
+                x0, y0 = point
+                xp = (x0 + slope * (y0 - intercept)) / (slope**2 + 1)
+                yp = slope * xp + intercept
+                return (xp, yp)
+
+            # Project these points onto the fitted line
+            projected_p1 = project_point(p1, edge["slope"], edge["intercept"])
+            projected_p2 = project_point(p2, edge["slope"], edge["intercept"])
+
+            # Ensure p1 has the lower x value; if not, swap p1 and p2
+            if projected_p1[0] > projected_p2[0]:
+                projected_p1, projected_p2 = projected_p2, projected_p1
+
+            # Calculate the direction vector of the line using the slope (dx, dy) and normalize
+            direction_vector = np.array([1, edge["slope"]])
+            unit_vector = direction_vector / np.linalg.norm(direction_vector)
+
+            # Add and subtract half thickness
+            adjustment_vector = unit_vector * median_distance
+            adjusted_projected_p1 = np.add(projected_p1, adjustment_vector)
+            adjusted_projected_p2 = np.subtract(projected_p2, adjustment_vector)
+
+            edge["extreme_points"] = [adjusted_projected_p1, adjusted_projected_p2]
+            edge["length"] = np.sqrt(
+                (adjusted_projected_p2[0] - adjusted_projected_p1[0]) ** 2
+                + (adjusted_projected_p2[1] - adjusted_projected_p1[1]) ** 2
+            )
+
 
     def get_shape_factor(self, x, y):
         """
@@ -181,15 +245,6 @@ class EDGE:
 
     def connect_edges(self):
         """Connect detected edges based on their slopes."""
-        # Fitting a straight line to each edge.
-        p0 = [0., 0.]
-        radian2angle = 180. / np.pi
-        for edge in self.edges:
-            p1, s = leastsq(self.residuals, p0, args=(edge['x'][:-1], edge['y'][:-1]))
-            edge['slope'] = p1[0]
-            edge['intercept'] = p1[1]
-            edge['slope_angle'] = np.arctan(edge['slope']) * radian2angle
-
         # Connect by the slopes of two edges.
         len_edges = len(self.edges)
         for i in range(len_edges - 1):
