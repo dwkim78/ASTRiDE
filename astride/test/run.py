@@ -17,9 +17,12 @@ def test():
     file_path = join(module_path, '../datasets/samples', 'long.fits')
     streak = Streak(file_path, output_path='./long/')
 
-    # file_path = '/Users/kim/Temp/hst_13003_54_wfc3_ir_f110w_drz_saved.fits'
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/hst_13003_54_wfc3_ir_f110w_drz_saved.fits'
     # streak = Streak(file_path, contour_threshold=5, radius_dev_cut=0.4,
     #                 area_cut=100)
+
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/CMV20000-104-5120-3840-16-1-900000-0-20170123055024-187.fits'
+    # streak = Streak(file_path, contour_threshold=2.5)
 
     # file_path = '/Users/kim/Temp/M6707HH.fits'
     # streak = Streak(file_path, contour_threshold=2.5)

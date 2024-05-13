@@ -384,10 +384,6 @@ This will send log messages to both console and a log file. Note that the path m
     - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
     - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
 
-### v?.?.?
-- Add RA, Dec to astride instance so that it is accessible internally.
-
-
 ### v0.3.7
 - Fix minor bugs.
 
