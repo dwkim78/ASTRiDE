@@ -246,6 +246,7 @@ class EDGE:
     def connect_edges(self):
         """Connect detected edges based on their slopes."""
         # Connect by the slopes of two edges.
+        radian2angle = 180. / np.pi
         len_edges = len(self.edges)
         for i in range(len_edges - 1):
             for j in range(i + 1, len_edges):
