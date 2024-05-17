@@ -58,7 +58,7 @@ class Streak:
 
         # check WCS info
         try:
-            wcsinfo = hdulist[0].header["CTYPE1"]
+            wcsinfo = hdulist[0].header['CTYPE1']
             if wcsinfo:
                 self.wcsinfo = True
                 self.filename = filename
@@ -375,40 +375,40 @@ class Streak:
             _ = e
             pass
 
-    def write_outputs(self, filename: str = "streaks.txt"):
+    def write_outputs(self, filename: str = 'streaks.txt'):
         """Write information of detected streaks to a file."""
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
         filepath = os.path.join(self.output_path, filename)
-        with open(filepath, "w") as fp:
+        with open(filepath, 'w') as fp:
             # Define the headers for both cases
             if self.wcsinfo:
                 header = (
-                    "#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter "
-                    "shape_factor radius_deviation slope_angle intercept connectivity "
-                    "ep1_x ep1_y ep1_ra(hms) ep1_dec(dms) ep1_ra(deg) ep1_dec(deg) "
-                    "ep2_x ep2_y ep2_ra(hms) ep2_dec(dms) ep2_ra(deg) ep2_dec(deg) "
-                    "length thickness\n"
+                    '#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter '
+                    'shape_factor radius_deviation slope_angle intercept connectivity '
+                    'ep1_x ep1_y ep1_ra(hms) ep1_dec(dms) ep1_ra(deg) ep1_dec(deg) '
+                    'ep2_x ep2_y ep2_ra(hms) ep2_dec(dms) ep2_ra(deg) ep2_dec(deg) '
+                    'length thickness\n'
                 )
             else:
                 header = (
-                    "#ID x_center y_center area perimeter shape_factor radius_deviation "
-                    "slope_angle intercept connectivity "
-                    "ep1_x ep1_y ep2_x ep2_y length thickness\n"
+                    '#ID x_center y_center area perimeter shape_factor radius_deviation '
+                    'slope_angle intercept connectivity '
+                    'ep1_x ep1_y ep2_x ep2_y length thickness\n'
                 )
             fp.write(header)
 
             # Iterate through streaks and write each one
             for edge in self.streaks:
-                ep1, ep2 = edge["extreme_points"]
+                ep1, ep2 = edge['extreme_points']
                 if self.wcsinfo:
                     # Center point coordinates
                     center_ra_dec_hms_dms = self.xy2sky(
-                        self.filename, edge["x_center"], edge["y_center"]
+                        self.filename, edge['x_center'], edge['y_center']
                     )
                     center_astcoord = self.xy2sky2(
-                        self.filename, edge["x_center"], edge["y_center"]
+                        self.filename, edge['x_center'], edge['y_center']
                     )
                     # Extreme point coordinates
                     ep1_ra_dec_hms_dms = self.xy2sky(self.filename, *ep1)
