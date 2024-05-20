@@ -24,20 +24,16 @@ def test():
     # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/CMV20000-104-5120-3840-16-1-900000-0-20170123055024-187.fits'
     # streak = Streak(file_path, contour_threshold=2.5)
 
-    # file_path = '/Users/kim/Temp/M6707HH.fits'
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/M6707HH.fits'
     # streak = Streak(file_path, contour_threshold=2.5)
 
-    # file_path = '/Users/kim/Temp/HorseHead.fits'
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/HorseHead.fits'
     # streak = Streak(file_path)
 
-    # file_path = '/Users/kim/Temp/mgm035.fts'
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/mgm035.fts'
     # streak = Streak(file_path, shape_cut=0.3, radius_dev_cut=0.4)
 
-    # file_path = '/Users/kim/Temp/dss2.17.00.00+30.00.00.fits'
-    # streak = Streak(file_path)
-
-    # file_path = '/Users/kim/Downloads/for_dwkim_2022_06_30/fits/' \
-    #             '2022_06_29_16_14_01_000_011107-stacked-tn1657066011.fits'
+    # file_path = '/Users/kim/Sync/DWKave/iPythonNoteBook/ASTRiDE/dss2.17.00.00+30.00.00.fits'
     # streak = Streak(file_path)
 
     logger.info('Search streaks..')
