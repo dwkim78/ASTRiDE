@@ -58,7 +58,7 @@ class Streak:
 
         # check WCS info
         try:
-            wcsinfo = hdulist[0].header["CTYPE1"]
+            wcsinfo = hdulist[0].header['CTYPE1']
             if wcsinfo:
                 self.wcsinfo = True
                 self.filename = filename
@@ -375,53 +375,65 @@ class Streak:
             _ = e
             pass
 
-    def write_outputs(self):
-        """Write information of detected streaks."""
-
+    def write_outputs(self, filename: str = 'streaks.txt'):
+        """Write information of detected streaks to a file."""
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
-        fp = open('%sstreaks.txt' % self.output_path, 'w')
-        if not self.wcsinfo:
-            fp.writelines('#ID x_center y_center area perimeter shape_factor ' +
-                          'radius_deviation slope_angle intercept ' +
-                          'connectivity\n')
-            for n, edge in enumerate(self.streaks):
-                line_str = '%2d %7.2f %7.2f %6.1f %6.1f %6.3f ' + \
-                           '%6.2f %5.2f %7.2f %2d\n'
-                line = line_str % \
-                       (
-                           edge['index'], edge['x_center'], edge['y_center'],
-                           edge['area'], edge['perimeter'],
-                           edge['shape_factor'],
-                           edge['radius_deviation'], edge['slope_angle'],
-                           edge['intercept'], edge['connectivity']
-                       )
-                fp.writelines(line)
-        elif self.wcsinfo:
-            fp.writelines('#ID x_center y_center ra(hms) dec(dms) ra(deg) ' +
-                          'dec(deg) area perimeter shape_factor ' +
-                          'radius_deviation slope_angle intercept ' +
-                          'connectivity\n')
-            for n, edge in enumerate(self.streaks):
-                line_str = '%2d %7.2f %7.2f %s %s %s %6.1f %6.1f ' + \
-                           '%6.3f %6.2f %5.2f %7.2f %2d\n'
-                line = line_str % \
-                       (
-                           edge['index'], edge['x_center'], edge['y_center'],
-                           self.xy2sky(self.filename, edge['x_center'],
-                                       edge['y_center']),
-                           self.xy2sky2(self.filename, edge['x_center'],
-                                        edge['y_center']).ra.degree,
-                           self.xy2sky2(self.filename, edge['x_center'],
-                                        edge['y_center']).dec.degree,
-                           edge['area'], edge['perimeter'],
-                           edge['shape_factor'],
-                           edge['radius_deviation'], edge['slope_angle'],
-                           edge['intercept'], edge['connectivity']
-                       )
-                fp.writelines(line)
-        fp.close()
+        filepath = os.path.join(self.output_path, filename)
+        with open(filepath, 'w') as fp:
+            # Define the headers for both cases
+            if self.wcsinfo:
+                header = (
+                    '#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter '
+                    'shape_factor radius_deviation slope_angle intercept connectivity '
+                    'ep1_x ep1_y ep1_ra(hms) ep1_dec(dms) ep1_ra(deg) ep1_dec(deg) '
+                    'ep2_x ep2_y ep2_ra(hms) ep2_dec(dms) ep2_ra(deg) ep2_dec(deg) '
+                    'length thickness\n'
+                )
+            else:
+                header = (
+                    '#ID x_center y_center area perimeter shape_factor radius_deviation '
+                    'slope_angle intercept connectivity '
+                    'ep1_x ep1_y ep2_x ep2_y length thickness\n'
+                )
+            fp.write(header)
+
+            # Iterate through streaks and write each one
+            for edge in self.streaks:
+                ep1, ep2 = edge['extreme_points']
+                if self.wcsinfo:
+                    # Center point coordinates
+                    center_ra_dec_hms_dms = self.xy2sky(
+                        self.filename, edge['x_center'], edge['y_center']
+                    )
+                    center_astcoord = self.xy2sky2(
+                        self.filename, edge['x_center'], edge['y_center']
+                    )
+                    # Extreme point coordinates
+                    ep1_ra_dec_hms_dms = self.xy2sky(self.filename, *ep1)
+                    ep1_astcoord = self.xy2sky2(self.filename, *ep1)
+                    ep2_ra_dec_hms_dms = self.xy2sky(self.filename, *ep2)
+                    ep2_astcoord = self.xy2sky2(self.filename, *ep2)
+
+                    line = (
+                        f"{edge['index']:2d} {edge['x_center']:7.2f} {edge['y_center']:7.2f} "
+                        f"{center_ra_dec_hms_dms} {center_astcoord.ra.degree} {center_astcoord.dec.degree} "
+                        f"{edge['area']:6.1f} {edge['perimeter']:6.1f} {edge['shape_factor']:6.3f} {edge['radius_deviation']:6.2f} "
+                        f"{edge['slope_angle']:5.2f} {edge['intercept']:7.2f} {edge['connectivity']:2d} "
+                        f"{ep1[0]:.2f} {ep1[1]:.2f} {ep1_ra_dec_hms_dms} {ep1_astcoord.ra.degree} {ep1_astcoord.dec.degree} "
+                        f"{ep2[0]:.2f} {ep2[1]:.2f} {ep2_ra_dec_hms_dms} {ep2_astcoord.ra.degree} {ep2_astcoord.dec.degree} "
+                        f"{edge['length']:6.1f} {edge['thickness']:6.1f}\n"
+                    )
+                else:
+                    line = (
+                        f"{edge['index']:2d} {edge['x_center']:7.2f} {edge['y_center']:7.2f} {edge['area']:6.1f} "
+                        f"{edge['perimeter']:6.1f} {edge['shape_factor']:6.3f} {edge['radius_deviation']:6.2f} "
+                        f"{edge['slope_angle']:5.2f} {edge['intercept']:7.2f} {edge['connectivity']:2d} "
+                        f"{ep1[0]:.2f} {ep1[1]:.2f} {ep2[0]:.2f} {ep2[1]:.2f} {edge['length']:6.1f} {edge['thickness']:6.1f}\n"
+                    )
+                fp.write(line)
+
 
 
 if __name__ == '__main__':
