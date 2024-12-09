@@ -48,7 +48,7 @@ ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of
 
  * For plotting figures.
 
-[Phoutils 0.4+](http://photutils.readthedocs.org/en/latest/index.html)
+[Phoutils 2.0+](http://photutils.readthedocs.org/en/latest/index.html)
 
  * For calculating background map of a fits image.
 

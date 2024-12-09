@@ -11,7 +11,7 @@ from astropy.stats import SigmaClip
 from astropy import coordinates
 from astropy import units as u
 from astropy.wcs import WCS
-from photutils import Background2D, MedianBackground
+from photutils.background import Background2D, MedianBackground
 
 from astride.utils.edge import EDGE
 
@@ -164,7 +164,7 @@ class Streak:
         self.streaks = edge.get_edges()
 
     def _detect_sources(self):
-        from photutils import DAOStarFinder
+        from photutils.detection import DAOStarFinder
 
         fwhm = 3.
         detection_threshold = 3.
