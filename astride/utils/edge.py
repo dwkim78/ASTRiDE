@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 from scipy.optimize import leastsq
 
@@ -96,9 +97,34 @@ class EDGE:
             edge['y_min'] = np.min(y)
             edge['y_max'] = np.max(y)
 
-            # TODO: perfectly vertical line?
+            # Extreme Points
+            # Calculate squared pairwise distances by computing outer differences and
+            # squaring them for both x and y coordinates (alternative: NumPy broadcasting)
+            dist_squared_matrix = (
+                np.add.outer(edge['x'], -edge['x']) ** 2
+                + np.add.outer(edge['y'], -edge['y']) ** 2
+            )
+
+            # Find the index of the maximum distance squared and its value
+            idx_max = np.unravel_index(
+                np.argmax(dist_squared_matrix), dist_squared_matrix.shape
+            )
+            ep1 = (edge['x'][idx_max[0]], edge['y'][idx_max[0]])
+            ep2 = (edge['x'][idx_max[1]], edge['y'][idx_max[1]])
+
+            # Calculate guess for line fitting
+            if not math.isclose(ep2[0], ep1[0], rel_tol=1e-9):  # Prevent division by zero
+                m_guess = (ep2[1] - ep1[1]) / (ep2[0] - ep1[0])
+                b_guess = ep1[1] - m_guess * ep1[0]
+                p0 = [m_guess, b_guess]
+            else:
+                p0 = [0,0]
+
             # Fitting a straight line to each edge.
-            p1, s = leastsq(self.residuals, p0, args=(edge['x'][:-1], edge['y'][:-1]))
+            # A perfectly vertical line will stop after 'maxfev' tries with sufficiently good values.
+            # (RuntimeWarning: Number of calls to function has reached maxfev = 600.)
+            p1, s = leastsq(self.orthogonal_residuals, p0, args=(edge['x'][:-1], edge['y'][:-1]))
+            # An alternative is 'scipy.odr', but a quick test shows it is at least twice as slow.
             edge['slope'] = p1[0]
             edge['intercept'] = p1[1]
             edge['slope_angle'] = np.arctan(edge['slope']) * radian2angle
@@ -113,20 +139,6 @@ class EDGE:
             edge['thickness'] = 2 * median_distance
 
             # Extreme Points and Length
-            # Calculate squared pairwise distances by computing outer differences and
-            # squaring them for both x and y coordinates (alternative: NumPy broadcasting)
-            dist_squared_matrix = (
-                np.add.outer(edge['x'], -edge['x']) ** 2
-                + np.add.outer(edge['y'], -edge['y']) ** 2
-            )
-
-            # Find the index of the maximum distance squared and its value
-            idx_max = np.unravel_index(
-                np.argmax(dist_squared_matrix), dist_squared_matrix.shape
-            )
-            p1 = (edge['x'][idx_max[0]], edge['y'][idx_max[0]])
-            p2 = (edge['x'][idx_max[1]], edge['y'][idx_max[1]])
-
             def project_point(point, slope, intercept):
                 """Project a point onto the line defined by slope and intercept."""
                 x0, y0 = point
@@ -135,8 +147,8 @@ class EDGE:
                 return (xp, yp)
 
             # Project these points onto the fitted line
-            projected_p1 = project_point(p1, edge['slope'], edge['intercept'])
-            projected_p2 = project_point(p2, edge['slope'], edge['intercept'])
+            projected_p1 = project_point(ep1, edge['slope'], edge['intercept'])
+            projected_p2 = project_point(ep2, edge['slope'], edge['intercept'])
 
             # Ensure p1 has the lower x value; if not, swap p1 and p2
             if projected_p1[0] > projected_p2[0]:
@@ -220,9 +232,9 @@ class EDGE:
         # Set filtered edges.
         self.edges = filtered_edges
 
-    def residuals(self, theta, x, y):
+    def orthogonal_residuals(self, theta, x, y):
         """
-        Residual for a straight line.
+        Orthogonal residual for a straight line.
 
         Parameters
         ----------
@@ -239,9 +251,10 @@ class EDGE:
             Residuals.
         """
 
-        residu = y - (theta[0] * x + theta[1])
-
-        return residu
+        slope = theta[0]
+        intercept = theta[1]
+        distances = (y - (slope * x + intercept)) / np.sqrt(1 + slope**2)
+        return distances
 
     def connect_edges(self):
         """Connect detected edges based on their slopes."""
