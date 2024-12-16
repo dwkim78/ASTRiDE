@@ -138,7 +138,7 @@ class Streak:
         self.background_map = self._bkg.background
         self.image = self.raw_image - self.background_map
 
-        self._med = self._bkg.background_m7edian
+        self._med = self._bkg.background_median
         self._std = self._bkg.background_rms_median
 
     def _detect_streaks(self):
@@ -164,7 +164,7 @@ class Streak:
         self.streaks = edge.get_edges()
 
     def _detect_sources(self):
-        from photutils import DAOStarFinder
+        from photutils.detection import DAOStarFinder
 
         fwhm = 3.
         detection_threshold = 3.
