@@ -16,7 +16,7 @@ setup(
     license='MIT',
     author='Dae-Won Kim',
     author_email='dwkim78@gmail.com',
-    install_requires=['numpy>=1.14', 'photutils>=0.4', 'astropy>=3.0',
+    install_requires=['numpy>=1.14', 'photutils>=2.0', 'astropy>=3.0',
                       'matplotlib>=2.1.1', 'scipy>=1.0.0',
                       'scikit-image>=0.13.1'],
     keywords=['astronomy', 'image', 'streak', 'satellite', 'meteor', 'NEO',
