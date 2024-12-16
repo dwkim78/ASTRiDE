@@ -11,7 +11,7 @@ from astropy.stats import SigmaClip
 from astropy import coordinates
 from astropy import units as u
 from astropy.wcs import WCS
-from photutils import Background2D, MedianBackground
+from photutils.background import Background2D, MedianBackground
 
 from astride.utils.edge import EDGE
 
@@ -138,7 +138,7 @@ class Streak:
         self.background_map = self._bkg.background
         self.image = self.raw_image - self.background_map
 
-        self._med = self._bkg.background_median
+        self._med = self._bkg.background_m7edian
         self._std = self._bkg.background_rms_median
 
     def _detect_streaks(self):
