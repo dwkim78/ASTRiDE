@@ -58,6 +58,8 @@ These libraries will be automatically installed if your machine does not have th
 
 ## 2. Installation
 
+ASTRiDE is installed from this repository. Note that the copy on PyPI is an old version and is no longer updated, so please do not use ```pip install astride```.
+
 The easiest way to install the ASTRiDE package is:
 
 ```bash
@@ -401,6 +403,7 @@ This will send log messages to both console and a log file.
 - Faster detection: line fitting runs only on the streak candidates that survive the morphology cuts, uses a closed-form total-least-squares fit (principal axis) instead of iterative fitting, and finds extreme points via the convex hull; WCS conversion in ```write_outputs``` is done in a single batch.
 - Modernized packaging (```pyproject.toml```), added a pytest test suite and GitHub Actions CI.
 - Removed the experimental machine-learning outlier filter (```astride.utils.outlier```), which was never used by the detection pipeline. ASTRiDE no longer depends on scikit-learn.
+- ASTRiDE is now installed from this repository only. It is no longer published on PyPI, and the archive of the old C pipeline is no longer shipped inside the installed package, which halves its size. The archive itself is still kept in the repository under ```astride/datasets/C```.
 
 ### v0.3.8
 - Add additional information of detected streaks such as length, thickness, extreme points, etc.
