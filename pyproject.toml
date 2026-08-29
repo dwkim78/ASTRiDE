@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astride"
+version = "0.4.0"
+description = "Automated Streak Detection for High Velocity Objects"
+readme = "README.rst"
+license = "MIT"
+authors = [
+    {name = "Dae-Won Kim", email = "dwkim78@gmail.com"},
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.8",
+    "matplotlib>=3.5",
+    "astropy>=5.0",
+    "photutils>=2.0",
+    "scikit-image>=0.19",
+]
+keywords = [
+    "astronomy", "image", "streak", "satellite", "meteor", "NEO",
+    "fast-moving objects", "boundary-tracing", "contour-tracing",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+
+[project.urls]
+Homepage = "https://github.com/dwkim78/astride"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["astride*"]
+
+[tool.setuptools.package-data]
+"astride.datasets" = ["samples/*.fits"]

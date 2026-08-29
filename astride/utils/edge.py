@@ -1,12 +1,14 @@
 import numpy as np
-import math
 
-from scipy.optimize import leastsq
+from scipy.spatial import ConvexHull
 
 
 class EDGE:
     """
     Detect edges (i.e. borders) using the input contours.
+
+    The intended call order is: quantify -> filter_edges ->
+    fit_lines -> connect_edges.
 
     Parameters
     ----------
@@ -22,14 +24,19 @@ class EDGE:
         An empirical radius deviation cut.
     connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
+    connectivity_distance_cut: float, optional
+        A maximum gap between two edges to be connected, in units of
+        the longer edge's length. None disables the distance check.
     """
     def __init__(self, contours, min_points=10, shape_cut=0.2,
-                 area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.):
+                 area_cut=10., radius_dev_cut=0.5, connectivity_angle=3.,
+                 connectivity_distance_cut=5.):
         # Set global values.
         self.shape_cut = shape_cut
         self.area_cut = area_cut
         self.radius_dev_cut = radius_dev_cut
         self.connectivity_angle = connectivity_angle
+        self.connectivity_distance_cut = connectivity_distance_cut
 
         # Set structure.
         self.edges = []
@@ -66,10 +73,14 @@ class EDGE:
                 'box_plotted': False})
 
     def quantify(self):
-        """Quantify shape of the contours."""
+        """
+        Quantify the morphology of the contours.
+
+        Only the quantities needed by filter_edges are derived here.
+        The more expensive line-based quantities are derived by
+        fit_lines, which is meant to run after filtering.
+        """
         four_pi = 4. * np.pi
-        p0 = [0., 0.]
-        radian2angle = 180. / np.pi
         for edge in self.edges:
             # Positions
             x = edge['x']
@@ -90,44 +101,61 @@ class EDGE:
             # We assume that the radius of the edge
             # as the median value of the distances from the center.
             radius = np.median(distances)
-            edge['radius_deviation'] = np.std(distances - radius) / radius
+            edge['radius_deviation'] = np.std(distances) / radius
 
             edge['x_min'] = np.min(x)
             edge['x_max'] = np.max(x)
             edge['y_min'] = np.min(y)
             edge['y_max'] = np.max(y)
 
+    def fit_lines(self):
+        """
+        Fit a straight line to each edge and derive line-based values
+        (slope, slope_angle, intercept, thickness, extreme_points and
+        length). Run this after filter_edges to avoid fitting edges
+        that are filtered out anyway.
+        """
+        radian2angle = 180. / np.pi
+        for edge in self.edges:
             # Extreme Points
-            # Calculate squared pairwise distances by computing outer differences and
-            # squaring them for both x and y coordinates (alternative: NumPy broadcasting)
+            # The most distant pair of contour points always lies on the
+            # convex hull, which keeps the pairwise-distance search small
+            # even for contours with tens of thousands of points.
+            points = np.column_stack([edge['x'], edge['y']])
+            try:
+                points = points[ConvexHull(points).vertices]
+            except Exception:
+                # Degenerate contours (e.g. collinear points) fall back
+                # to the full pairwise search.
+                pass
+
             dist_squared_matrix = (
-                np.add.outer(edge['x'], -edge['x']) ** 2
-                + np.add.outer(edge['y'], -edge['y']) ** 2
+                np.subtract.outer(points[:, 0], points[:, 0]) ** 2
+                + np.subtract.outer(points[:, 1], points[:, 1]) ** 2
             )
 
             # Find the index of the maximum distance squared and its value
             idx_max = np.unravel_index(
                 np.argmax(dist_squared_matrix), dist_squared_matrix.shape
             )
-            ep1 = (edge['x'][idx_max[0]], edge['y'][idx_max[0]])
-            ep2 = (edge['x'][idx_max[1]], edge['y'][idx_max[1]])
+            ep1 = (points[idx_max[0]][0], points[idx_max[0]][1])
+            ep2 = (points[idx_max[1]][0], points[idx_max[1]][1])
 
-            # Calculate guess for line fitting
-            if not math.isclose(ep2[0], ep1[0], rel_tol=1e-9):  # Prevent division by zero
-                m_guess = (ep2[1] - ep1[1]) / (ep2[0] - ep1[0])
-                b_guess = ep1[1] - m_guess * ep1[0]
-                p0 = [m_guess, b_guess]
-            else:
-                p0 = [0,0]
-
-            # Fitting a straight line to each edge.
-            # A perfectly vertical line will stop after 'maxfev' tries with sufficiently good values.
-            # (RuntimeWarning: Number of calls to function has reached maxfev = 600.)
-            p1, s = leastsq(self.orthogonal_residuals, p0, args=(edge['x'][:-1], edge['y'][:-1]))
-            # An alternative is 'scipy.odr', but a quick test shows it is at least twice as slow.
-            edge['slope'] = p1[0]
-            edge['intercept'] = p1[1]
-            edge['slope_angle'] = np.arctan(edge['slope']) * radian2angle
+            # Fitting a straight line to each edge by the total least
+            # squares: the principal axis of the second central moments
+            # minimizes the sum of squared orthogonal distances in a
+            # closed form, regardless of the line orientation.
+            x_c = edge['x'][:-1] - np.mean(edge['x'][:-1])
+            y_c = edge['y'][:-1] - np.mean(edge['y'][:-1])
+            theta = 0.5 * np.arctan2(2. * np.sum(x_c * y_c),
+                                     np.sum(x_c * x_c) - np.sum(y_c * y_c))
+            # Cap the slope so that the downstream arithmetic (projection
+            # and thickness) stays numerically stable for vertical lines.
+            slope = np.clip(np.tan(theta), -1.e6, 1.e6)
+            edge['slope'] = slope
+            edge['intercept'] = np.mean(edge['y'][:-1]) - \
+                slope * np.mean(edge['x'][:-1])
+            edge['slope_angle'] = theta * radian2angle
 
             # Thickness
             # Calculate orthogonal distances to the line
@@ -232,29 +260,27 @@ class EDGE:
         # Set filtered edges.
         self.edges = filtered_edges
 
-    def orthogonal_residuals(self, theta, x, y):
+    def line_angle_diff(self, angle1, angle2):
         """
-        Orthogonal residual for a straight line.
+        Angular separation between two undirected lines in degrees.
+
+        Since a line direction is defined modulo 180 degrees, angles
+        such as +89.9 and -89.9 are only 0.2 degrees apart.
 
         Parameters
         ----------
-        theta : list of float
-            Coefficients of float[2].
-        x : array_like
-            An array of x values.
-        y : array_like
-            An array of y values.
+        angle1 : float
+            Angle of the first line in degrees.
+        angle2 : float
+            Angle of the second line in degrees.
 
         Returns
         -------
-        residual : float
-            Residuals.
+        diff : float
+            Angular separation within [0, 90] degrees.
         """
-
-        slope = theta[0]
-        intercept = theta[1]
-        distances = (y - (slope * x + intercept)) / np.sqrt(1 + slope**2)
-        return distances
+        diff = np.abs(angle1 - angle2) % 180.
+        return np.minimum(diff, 180. - diff)
 
     def connect_edges(self):
         """Connect detected edges based on their slopes."""
@@ -263,27 +289,41 @@ class EDGE:
         len_edges = len(self.edges)
         for i in range(len_edges - 1):
             for j in range(i + 1, len_edges):
-                if np.abs(self.edges[i]['slope_angle'] -
-                          self.edges[j]['slope_angle']) <= \
+                if self.line_angle_diff(self.edges[i]['slope_angle'],
+                                        self.edges[j]['slope_angle']) <= \
                    self.connectivity_angle:
                     # Then, the slope between the centers of the two edges
                     # should be similar with the slopes of
                     # the two lines of the edges as well.
-                    c_slope = (self.edges[i]['y_center'] -
-                                    self.edges[j]['y_center']) / \
-                                   (self.edges[i]['x_center'] -
-                                    self.edges[j]['x_center'])
-                    c_slope_angle = np.arctan(c_slope) * radian2angle
+                    # arctan2 handles the vertical case (identical x centers).
+                    c_slope_angle = np.arctan2(
+                        self.edges[i]['y_center'] - self.edges[j]['y_center'],
+                        self.edges[i]['x_center'] -
+                        self.edges[j]['x_center']) * radian2angle
 
-                    if np.abs(c_slope_angle - self.edges[i]['slope_angle']) <= \
+                    if self.line_angle_diff(
+                           c_slope_angle, self.edges[i]['slope_angle']) <= \
                        self.connectivity_angle and \
-                       np.abs(c_slope_angle - self.edges[j]['slope_angle']) <= \
+                       self.line_angle_diff(
+                           c_slope_angle, self.edges[j]['slope_angle']) <= \
                        self.connectivity_angle:
+                        # Reject a pair too far apart to be fragments of
+                        # the same streak.
+                        if self.connectivity_distance_cut is not None:
+                            gap = min(
+                                np.hypot(p[0] - q[0], p[1] - q[1])
+                                for p in self.edges[i]['extreme_points']
+                                for q in self.edges[j]['extreme_points'])
+                            allowed = self.connectivity_distance_cut * \
+                                max(self.edges[i]['length'],
+                                    self.edges[j]['length'])
+                            if gap > allowed:
+                                continue
                         self.edges[i]['connectivity'] = self.edges[j]['index']
                         break
 
 if __name__ == '__main__':
-    import pylab as pl
+    import matplotlib.pyplot as pl
 
     # Sample contour with only one edge.
     contours = np.array([[[985.2156529,  385.],
@@ -394,6 +434,7 @@ if __name__ == '__main__':
 
     edge = EDGE(contours)
     edge.quantify()
+    edge.fit_lines()
     edge.connect_edges()
     edges = edge.get_edges()
     print(edges)

@@ -182,6 +182,7 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | area_cut | Empirical cut for area inside each border. Default is 10. |
 | radius_dev_cut  | Empirical cut for radius deviation. Default is 0.5. |
 | connectivity_angle | The maximum angle of slope to link each streak. Default is 3 degree. |
+| connectivity_distance_cut | The maximum gap between two streaks to be linked, in units of the longer streak's length. Default is 5. Set to "None" to disable the distance check (i.e. link by angles only, as in versions before 0.4.0). |
 | output_path  | Output path to save figures and outputs. Default is "None", which will create a folder of the input filename. |
 
 Although you can customize pretty much everything of the Streak instance, it is recommended to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
@@ -375,14 +376,18 @@ Keep in mind that you need to generate only one logger instance through the whol
  logger = Logger('/PATH/TO/FILE.log').getLogger()
  ```
 
-This will send log messages to both console and a log file. Note that the path must be the absolute path.
+This will send log messages to both console and a log file.
 
 ## ChangeLog
 
-### v?.?.?
-- real-time training of an outlier model to detect streaks?
-    - Tested with several different clustering algorithms (e.g. Birch, KMeans, hierarchical clustering, etc.), and it works well for clear outliers but not for ambiguous outliers (of course not since, strictly speaking, they are not even outliers). In other words, it detects long and thin streaks easily since they are clear outliers (i.e. they are not point sources), but for short and rather thick streaks, it fails to detect. In contrast, the current method using morphological parameters detects both kinds.
-    - Nevertheless, it is possible to use clustering methods as supplementary detection methods for long streaks.
+### v0.4.0
+- Streaks crossing the image boundary are now detected (previously discarded as unclosed contours).
+- Nearly vertical streaks are now correctly linked (fixed the +90/-90 degree angle wrap-around in the connectivity check).
+- New option ```connectivity_distance_cut```: distant but collinear objects are no longer linked by default.
+- FITS files with data in extension HDUs (e.g. compressed or multi-extension FITS) and images containing NaN pixels are now supported.
+- Fall back to pixel-only outputs when the header advertises a WCS that cannot convert coordinates (previously crashed).
+- Faster detection: line fitting runs only on the streak candidates that survive the morphology cuts, uses a closed-form total-least-squares fit (principal axis) instead of iterative fitting, and finds extreme points via the convex hull; WCS conversion in ```write_outputs``` is done in a single batch.
+- Modernized packaging (```pyproject.toml```), added a pytest test suite and GitHub Actions CI.
 
 ### v0.3.8
 - Add additional information of detected streaks such as length, thickness, extreme points, etc.

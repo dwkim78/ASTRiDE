@@ -29,9 +29,11 @@ class Outlier:
         for i in range(features.shape[1]):
             avg = np.median(features[::, i])
             std = np.std(features[::, i])
+            if std == 0.:
+                std = 1.
 
             normed_features[::, i] -= avg
-            normed_features[::, i] /= avg
+            normed_features[::, i] /= std
 
         self.edges = edges
         self.features = features

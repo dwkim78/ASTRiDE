@@ -2,7 +2,7 @@ import os
 import sys
 
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as plt
 
 from skimage import measure
 from astropy.io import fits
@@ -43,6 +43,9 @@ class Streak:
         An empirical radius deviation cut.
     connectivity_angle: float, optional
         An maximum angle to connect each separated edge.
+    connectivity_distance_cut: float, optional
+        A maximum gap between two edges to be connected, in units of
+        the longer edge's length. None disables the distance check.
     fully_connected: str, optional
         See skimage.measure.find_contours for details.
     output_path: str, optional
@@ -52,18 +55,28 @@ class Streak:
     def __init__(self, filename, remove_bkg='constant', bkg_box_size=50,
                  contour_threshold=3., min_points=10, shape_cut=0.2,
                  area_cut=20., radius_dev_cut=0.5, connectivity_angle=3.,
-                 fully_connected='high', output_path=None):
+                 connectivity_distance_cut=5., fully_connected='high',
+                 output_path=None):
         hdulist = fits.open(filename)
-        raw_image = hdulist[0].data.astype(np.float64)
+        # Use the first HDU containing 2D image data, so that compressed
+        # FITS and multi-extension files are supported as well.
+        raw_image = None
+        for hdu in hdulist:
+            if hdu.data is None:
+                continue
+            data = np.squeeze(hdu.data)
+            if data.ndim == 2:
+                raw_image = data.astype(np.float64)
+                header = hdu.header
+                break
+        if raw_image is None:
+            hdulist.close()
+            raise ValueError('No 2D image data found in %s' % filename)
 
         # check WCS info
-        try:
-            wcsinfo = hdulist[0].header['CTYPE1']
-            if wcsinfo:
-                self.wcsinfo = True
-                self.filename = filename
-        except:
-            self.wcsinfo = False
+        self.wcsinfo = bool(header.get('CTYPE1'))
+        self.filename = filename
+        self.header = header.copy()
 
         hdulist.close()
 
@@ -98,28 +111,33 @@ class Streak:
         self.area_cut = area_cut
         self.radius_dev_cut = radius_dev_cut
         self.connectivity_angle = connectivity_angle
+        self.connectivity_distance_cut = connectivity_distance_cut
         self.fully_connected = fully_connected
 
         # Set output path.
         if output_path is None:
-            output_path = '%s' % \
-                          (filename[:filename.rfind('.')])
+            output_path = os.path.splitext(filename)[0]
+            # Avoid the name clash between the input file and
+            # the output folder when the filename has no extension.
+            if output_path == filename:
+                output_path = filename + '_output'
         if output_path[-1] != '/':
             output_path += '/'
         self.output_path = output_path
 
-        # For plotting.
-        pl.rcParams['figure.figsize'] = [12, 9]
-
     def detect(self):
         """Run the pipeline to detect streaks."""
         # Remove background.
-        if self.remove_bkg is 'map':
+        if self.remove_bkg == 'map':
             self._remove_background()
-        elif self.remove_bkg is 'constant':
+        elif self.remove_bkg == 'constant':
             _mean, self._med, self._std = \
                 sigma_clipped_stats(self.raw_image)
             self.image = self.raw_image - self._med
+
+        # Replace invalid pixels with the background level (i.e. zero
+        # after subtraction) so that contours near them still close.
+        self.image[~np.isfinite(self.image)] = 0.
 
         # Detect sources. Test purpose only.
         # self._detect_sources()
@@ -144,20 +162,38 @@ class Streak:
     def _detect_streaks(self):
         # Find contours.
         # Returned contours is the list of [row, columns] (i.e. [y, x])
-        contours = measure.find_contours(
-            self.image, self._std * self.contour_threshold,
-            fully_connected=self.fully_connected)
+        # The image border is temporarily lowered below the contour level,
+        # so that streaks crossing the image boundary yield closed contours
+        # rather than open ones, which are discarded as non-streaks.
+        level = self._std * self.contour_threshold
+        border_slices = [np.s_[0, :], np.s_[-1, :],
+                         np.s_[:, 0], np.s_[:, -1]]
+        saved_borders = [self.image[s].copy() for s in border_slices]
+        for s in border_slices:
+            self.image[s] = -level
+        try:
+            contours = measure.find_contours(
+                self.image, level,
+                fully_connected=self.fully_connected)
+        finally:
+            for s, saved in zip(border_slices, saved_borders):
+                self.image[s] = saved
 
         # Quantify shapes of the contours and save them as 'edges'.
         edge = EDGE(contours, min_points=self.min_points,
                     shape_cut=self.shape_cut, area_cut=self.area_cut,
                     radius_dev_cut=self.radius_dev_cut,
-                    connectivity_angle=self.connectivity_angle)
+                    connectivity_angle=self.connectivity_angle,
+                    connectivity_distance_cut=self.connectivity_distance_cut)
         edge.quantify()
-        self.raw_borders = edge.get_edges()
+        # Copy the dictionaries so that later filtering (e.g. index
+        # renumbering) does not alter the raw borders.
+        self.raw_borders = [border.copy() for border in edge.get_edges()]
 
         # Filter the edges, so only streak remains.
         edge.filter_edges()
+        # Fit lines to the surviving edges only (the expensive step).
+        edge.fit_lines()
         edge.connect_edges()
 
         # Set streaks variable.
@@ -171,7 +207,7 @@ class Streak:
         daofind = DAOStarFinder(threshold=(self._med + self._std *
                                 detection_threshold), fwhm=fwhm)
         sources = daofind.find_stars(self.image)
-        pl.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
+        plt.plot(sources['xcentroid'], sources['ycentroid'], 'r.')
 
     def _find_box(self, n, edges, xs, ys):
         """
@@ -206,10 +242,9 @@ class Streak:
 
         # If connected with other edge.
         if current_edge['connectivity'] != -1:
-            self._find_box(current_edge['connectivity'], edges, xs, ys)
+            return self._find_box(current_edge['connectivity'], edges, xs, ys)
         # Otherwise.
-        else:
-            return xs, ys
+        return xs, ys
 
     def plot_figures(self, cut_threshold=3.):
         """
@@ -235,57 +270,38 @@ class Streak:
             med + cut_threshold * std
         plot_data[np.where(self.image < med - cut_threshold * std)] = \
             med - cut_threshold * std
-        pl.clf()
-        pl.imshow(plot_data, origin='lower', cmap='gray')
+
+        fig, ax = plt.subplots(figsize=(12, 9))
+        ax.imshow(plot_data, origin='lower', cmap='gray')
 
         # Plot all raw borders. Test purpose only.
         # edges = self.raw_borders
         # for n, edge in enumerate(edges):
-        #     pl.plot(edge['x'], edge['y'])
-        #     pl.text(edge['x'][0], edge['y'][1],
+        #     ax.plot(edge['x'], edge['y'])
+        #     ax.text(edge['x'][0], edge['y'][0],
         #             '%.2f' % (edge['shape_factor']), color='b', fontsize=10)
-        # pl.axis([0, self.image.shape[0], 0, self.image.shape[1]])
-        # pl.savefig('%sall.png' % self.output_path)
-        # return 0
 
         edges = self.streaks
         # Plot all contours.
-        for n, edge in enumerate(edges):
-            pl.plot(edge['x'], edge['y'])
-            pl.text(edge['x'][0], edge['y'][1],
+        for edge in edges:
+            ax.plot(edge['x'], edge['y'])
+            ax.text(edge['x'][0], edge['y'][0],
                     '%d' % (edge['index']), color='y', fontsize=15,
                     weight='bold')
 
-        # Plot boxes.
+        ax.set_xlabel('X/pixel')
+        ax.set_ylabel('Y/pixel')
+        ax.axis([0, self.image.shape[1], 0, self.image.shape[0]])
+        fig.savefig('%sall.png' % self.output_path)
+
+        # Save a zoomed figure of each streak. Connected streaks
+        # share one figure (i.e. one box).
         # Box margin in pixel.
         box_margin = 10
-        for n, edge in enumerate(edges):
-            # plot boxes around the edge.
-            if not edge['box_plotted']:
-                # Define the box to plot.
-                xs = []
-                ys = []
-                self._find_box(edge['index'], edges, xs, ys)
-                x_min = max(np.min(xs) - box_margin, 0)
-                x_max = min(np.max(xs) + box_margin, self.image.shape[1])
-                y_min = max(np.min(ys) - box_margin, 0)
-                y_max = min(np.max(ys) + box_margin, self.image.shape[0])
-                box_x = [x_min, x_min, x_max, x_max]
-                box_y = [y_min, y_max, y_max, y_min]
-                # pl.fill(box_x, box_y, ls='--', fill=False, ec='r', lw=2)
-                edge['box_plotted'] = True
-
-        pl.xlabel('X/pixel')
-        pl.ylabel('Y/pixel')
-        pl.axis([0, self.image.shape[1], 0, self.image.shape[0]])
-        pl.savefig('%sall.png' % self.output_path)
-
-        # Plot all individual edges (connected).
-        for n, edge in enumerate(edges):
-            # Reset.
+        for edge in edges:
             edge['box_plotted'] = False
 
-        for n, edge in enumerate(edges):
+        for edge in edges:
             if not edge['box_plotted']:
                 # Define the box to plot.
                 xs = []
@@ -296,11 +312,10 @@ class Streak:
                 y_min = max(np.min(ys) - box_margin, 0)
                 y_max = min(np.max(ys) + box_margin, self.image.shape[0])
                 edge['box_plotted'] = True
-                pl.axis([x_min, x_max, y_min, y_max])
-                pl.savefig('%s%d.png' % (self.output_path, edge['index']))
+                ax.axis([x_min, x_max, y_min, y_max])
+                fig.savefig('%s%d.png' % (self.output_path, edge['index']))
 
-        # Clear figure.
-        pl.clf()
+        plt.close(fig)
 
     def xy2sky(self, filename, x, y, sep=':'):
         """
@@ -336,9 +351,8 @@ class Streak:
             coord = '{0} {1}'.format(alpha.split(' ')[0],
                                     delta.split(' ')[1])
             return coord
-        except Exception as e:
-            _ = e
-            pass
+        except Exception:
+            return None
 
     def xy2sky2(self, filename, x, y):
         """
@@ -371,19 +385,63 @@ class Streak:
 
             return astcoords[0]
 
-        except Exception as e:
-            _ = e
-            pass
+        except Exception:
+            return None
+
+    def _pix2sky(self, points):
+        """
+        Convert pixel coordinates to sky coordinates all at once.
+
+        Parameters
+        ----------
+        points : array_like
+            A list of [x, y] pixel coordinates.
+
+        Returns
+        -------
+        astcoords : astropy.coordinates.SkyCoord
+            Converted sky coordinates.
+        hmsdms : list of str
+            Coordinate strings in the HMS/DMS format.
+            (None, None) is returned if the conversion fails.
+        """
+        try:
+            w = WCS(self.header)
+            astcoords_deg = w.wcs_pix2world(points, 0)
+            astcoords = coordinates.SkyCoord(astcoords_deg * u.deg,
+                                             frame='icrs')
+            alpha = astcoords.to_string(style='hmsdms', sep=':', precision=2)
+            delta = astcoords.to_string(style='hmsdms', sep=':', precision=1)
+            hmsdms = ['{0} {1}'.format(a.split(' ')[0], d.split(' ')[1])
+                      for a, d in zip(alpha, delta)]
+            return astcoords, hmsdms
+        except Exception:
+            return None, None
 
     def write_outputs(self, filename: str = 'streaks.txt'):
         """Write information of detected streaks to a file."""
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
+        # Convert all coordinates at once with a single WCS instance.
+        # Fall back to the pixel-only format when the header advertises
+        # a WCS (e.g. CTYPE1) that cannot actually convert coordinates.
+        wcsinfo = self.wcsinfo
+        astcoords = hmsdms = None
+        if wcsinfo and len(self.streaks):
+            points = []
+            for edge in self.streaks:
+                ep1, ep2 = edge['extreme_points']
+                points.extend([[edge['x_center'], edge['y_center']],
+                               list(ep1), list(ep2)])
+            astcoords, hmsdms = self._pix2sky(points)
+            if astcoords is None:
+                wcsinfo = False
+
         filepath = os.path.join(self.output_path, filename)
         with open(filepath, 'w') as fp:
             # Define the headers for both cases
-            if self.wcsinfo:
+            if wcsinfo:
                 header = (
                     '#ID x_center y_center ra(hms) dec(dms) ra(deg) dec(deg) area perimeter '
                     'shape_factor radius_deviation slope_angle intercept connectivity '
@@ -400,21 +458,17 @@ class Streak:
             fp.write(header)
 
             # Iterate through streaks and write each one
-            for edge in self.streaks:
+            for k, edge in enumerate(self.streaks):
                 ep1, ep2 = edge['extreme_points']
-                if self.wcsinfo:
+                if wcsinfo:
                     # Center point coordinates
-                    center_ra_dec_hms_dms = self.xy2sky(
-                        self.filename, edge['x_center'], edge['y_center']
-                    )
-                    center_astcoord = self.xy2sky2(
-                        self.filename, edge['x_center'], edge['y_center']
-                    )
+                    center_ra_dec_hms_dms = hmsdms[3 * k]
+                    center_astcoord = astcoords[3 * k]
                     # Extreme point coordinates
-                    ep1_ra_dec_hms_dms = self.xy2sky(self.filename, *ep1)
-                    ep1_astcoord = self.xy2sky2(self.filename, *ep1)
-                    ep2_ra_dec_hms_dms = self.xy2sky(self.filename, *ep2)
-                    ep2_astcoord = self.xy2sky2(self.filename, *ep2)
+                    ep1_ra_dec_hms_dms = hmsdms[3 * k + 1]
+                    ep1_astcoord = astcoords[3 * k + 1]
+                    ep2_ra_dec_hms_dms = hmsdms[3 * k + 2]
+                    ep2_astcoord = astcoords[3 * k + 2]
 
                     line = (
                         f"{edge['index']:2d} {edge['x_center']:7.2f} {edge['y_center']:7.2f} "

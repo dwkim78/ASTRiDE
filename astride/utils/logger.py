@@ -8,7 +8,7 @@ class Logger():
     Parameters
     ----------
     filepath : str, optional
-        Specify a log filename with the absolute path.
+        Specify a log filename, optionally with a path.
         If not given, no output is written to a file.
     """
     def __init__(self, filepath=None):
@@ -21,7 +21,7 @@ class Logger():
             #datefmt='%Y/%m/%d %H:%M:%S')
 
         # create file handler which logs even debug messages.
-        if filepath and filepath[0] == '/':
+        if filepath:
             fh = logging.FileHandler(filepath, 'w')
             fh.setLevel(logging.DEBUG)
             fh.setFormatter(formatter)
@@ -48,6 +48,6 @@ if __name__ == '__main__':
 
     logger.debug('debug message')
     logger.info('info message')
-    logger.warn('warn message')
+    logger.warning('warn message')
     logger.error('error message')
     logger.critical('critical message')
