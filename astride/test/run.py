@@ -39,12 +39,6 @@ def test():
     logger.info('Search streaks..')
     streak.detect()
 
-    # from astride.utils.outlier import Outlier
-    # logger.info('Search by Machine Learning..')
-    # ot = Outlier(streak.raw_borders)
-    # streak.streaks = ot.run(contamination=0.0001)
-    # print(streak.streaks)
-
     logger.info('Save figures and write outputs to %s' %
                 streak.output_path)
     streak.write_outputs()

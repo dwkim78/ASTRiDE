@@ -26,29 +26,29 @@ ASTRiDE aims to detect streaks in astronomical images using a "<b>border</b>" of
 
 ## 1. Dependency
 
-[Python 2.7+ and 3.5+](https://www.python.org/)
+[Python 3.10+](https://www.python.org/)
 
-[Numpy 1.14+](http://www.numpy.org/)
+[Numpy 1.22+](http://www.numpy.org/)
  
  * Numerical Python library.
 
-[Scipy 1.0.0+](https://www.scipy.org/)
+[Scipy 1.8+](https://www.scipy.org/)
 
  * Scientific Python library.
 
-[Scikit-image 0.13.1+](http://scikit-image.org/)
+[Scikit-image 0.19+](http://scikit-image.org/)
  
  * To get a contour map of a fits image.
 
-[Astropy 3.0+](http://www.astropy.org/)
+[Astropy 5.0+](http://www.astropy.org/)
 
  * For reading a fits file.
 
-[Matplotlib 2.1.1+](http://matplotlib.org/)
+[Matplotlib 3.5+](http://matplotlib.org/)
 
  * For plotting figures.
 
-[Phoutils 2.0+](http://photutils.readthedocs.org/en/latest/index.html)
+[Photutils 2.0+](http://photutils.readthedocs.org/en/latest/index.html)
 
  * For calculating background map of a fits image.
 
@@ -60,23 +60,31 @@ These libraries will be automatically installed if your machine does not have th
 
 The easiest way to install the ASTRiDE package is:
 
-```python
+```bash
 pip install git+https://github.com/dwkim78/ASTRiDE
 ```
 
-If you do not want to install/upgrade the dependencies, execute the above commend with the ```--no-deps``` option. ASTRiDE possibly works with older version of Python and other libraries. 
+If you do not want to install/upgrade the dependencies, execute the above commend with the ```--no-deps``` option.
 
 
 Alternatively, you can download the ASTRiDE package from the Git repository as:
 
-```python
+```bash
 git clone https://github.com/dwkim78/ASTRiDE
 
 cd ASTRiDE
-python setup.py install
+pip install .
 ```
 
-You can edit ```setup.py```, if you do not want to update your own Python libraries (i.e. edit the ```install_requires``` variable).
+If you want to modify the source code and test it right away, install it in the editable mode together with the test dependencies, which is the same way the tests are run on the continuous integration:
+
+```bash
+pip install -e ".[test]"
+
+pytest
+```
+
+You can edit ```pyproject.toml```, if you do not want to update your own Python libraries (i.e. edit the ```dependencies``` variable).
 
 
 ### 2.1 Installation on Raspberry Pi 4
@@ -122,14 +130,17 @@ The output text file named as "streaks.txt" contains following information.
 |----:|:------------|
 | ID  | Index |
 | x_center, y_center  | Coordinate of the center  |
-| RA, Dec | RA and Dec coordinates if a FITS file provides WCS header |
+| ra, dec | RA and Dec coordinates of the center, both in the HMS/DMS format and in degrees. Written only if a FITS file provides a usable WCS header |
 | area  | Area inside a streak  |
 | perimeter  | Perimeter of a streak  |
 | shape_factor  | 4 * PI * area / perimeter^2 |
 | radius_deviation  | Parameter to check roundness  |
-| slope  | Slope of a linear line fitted to a streak  |
+| slope_angle  | Angle of a linear line fitted to a streak, in degrees  |
 | intercept  | Intercept of a linear line fitted to a streak  |
 | connectivity  | ID of another streak that is likely to be linked to the current streak  |
+| ep1_x, ep1_y, ep2_x, ep2_y  | Coordinates of the two extreme points of a streak. If a usable WCS header is provided, their RA and Dec coordinates are written as well  |
+| length  | Length of a streak, measured between the two extreme points  |
+| thickness  | Thickness of a streak  |
 
 
 Most of these information are accessible using the ASTRiDE Streak instance as well. For details, see [this section](#accessible-information-inside-the-streak-instance).
@@ -179,10 +190,11 @@ You can replace "long.fits" with your own fits filename. There are many options 
 | contour_threshold  | Threshold to extract a contour map. If this value is high, only bright streaks will be detected. Default is 3. Higher values, faster ASTRiDE runtime. |
 | min_points  | The minimum number of data points (i.e. pixels) of each border. Default is 10 (i.e. roughly saying, a length of ~5 pixels if the border is a streak-like object). Higher values, faster ASTRiDE runtime. |
 | shape_cut  | Empirical cut for shape factor. Default is 0.2. |
-| area_cut | Empirical cut for area inside each border. Default is 10. |
+| area_cut | Empirical cut for area inside each border. Default is 20. |
 | radius_dev_cut  | Empirical cut for radius deviation. Default is 0.5. |
 | connectivity_angle | The maximum angle of slope to link each streak. Default is 3 degree. |
 | connectivity_distance_cut | The maximum gap between two streaks to be linked, in units of the longer streak's length. Default is 5. Set to "None" to disable the distance check (i.e. link by angles only, as in versions before 0.4.0). |
+| fully_connected | How the contour tracing connects the pixels of the same value. Either 'high' or 'low'. See [skimage.measure.find_contours](https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.find_contours) for details. Default is 'high'. |
 | output_path  | Output path to save figures and outputs. Default is "None", which will create a folder of the input filename. |
 
 Although you can customize pretty much everything of the Streak instance, it is recommended to leave them as they are until you understand each option. Some important options among these are explained through the following sections.
@@ -388,6 +400,7 @@ This will send log messages to both console and a log file.
 - Fall back to pixel-only outputs when the header advertises a WCS that cannot convert coordinates (previously crashed).
 - Faster detection: line fitting runs only on the streak candidates that survive the morphology cuts, uses a closed-form total-least-squares fit (principal axis) instead of iterative fitting, and finds extreme points via the convex hull; WCS conversion in ```write_outputs``` is done in a single batch.
 - Modernized packaging (```pyproject.toml```), added a pytest test suite and GitHub Actions CI.
+- Removed the experimental machine-learning outlier filter (```astride.utils.outlier```), which was never used by the detection pipeline. ASTRiDE no longer depends on scikit-learn.
 
 ### v0.3.8
 - Add additional information of detected streaks such as length, thickness, extreme points, etc.

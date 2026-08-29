@@ -7,7 +7,6 @@ from astropy.io import fits
 
 from astride import Streak
 from astride.utils.edge import EDGE
-from astride.utils.outlier import Outlier
 
 SAMPLE = os.path.join(os.path.dirname(__file__), '..', 'astride',
                       'datasets', 'samples', 'long.fits')
@@ -64,6 +63,25 @@ def test_sample_image(tmp_path):
         # The sample image has a WCS, so sky coordinates are written.
         assert 'ra(hms)' in header
         assert len(fp.readlines()) == 2
+
+
+def test_remove_bkg_map(tmp_path):
+    """The photutils Background2D path must keep working."""
+    img = make_image([(50., 50., 250., 200.)])
+    # Add a gradient so that a background map is actually needed.
+    img += np.linspace(0., 20., img.shape[1])[np.newaxis, :]
+    path = save_fits(img, tmp_path / 'gradient.fits')
+    streak = Streak(path, remove_bkg='map', bkg_box_size=50,
+                    output_path=out_dir(tmp_path, 'out'))
+    streak.detect()
+    assert streak.background_map is not None
+    assert np.isfinite(streak._std) and streak._std > 0.
+    assert len(streak.streaks) == 1
+
+
+def test_invalid_remove_bkg():
+    with pytest.raises(RuntimeError):
+        Streak(SAMPLE, remove_bkg='nope')
 
 
 def test_boundary_crossing_streak(tmp_path):
@@ -195,12 +213,3 @@ def test_edge_pipeline_order():
     edge.fit_lines()
     assert 'slope_angle' in edge.get_edges()[0]
     edge.connect_edges()
-
-
-def test_outlier_normalization():
-    edges = [{'perimeter': 10. + i, 'area': 5. + i, 'shape_factor': 0.5,
-              'radius_deviation': 0.1 * i} for i in range(10)]
-    outlier = Outlier(edges)
-    assert np.std(outlier.normed_features[:, 0]) == pytest.approx(1.)
-    # A constant feature column must not produce NaN or inf.
-    assert np.all(np.isfinite(outlier.normed_features))
